@@ -1,0 +1,2473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWP Calculator – FinCal Innovation | HDFC Mutual Fund</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════
+   BRAND PALETTE — PDF SPEC ONLY
+   #224c87  Blue
+   #da3832  Red
+   #919090  Grey
+═══════════════════════════════ */
+:root {
+  --blue:        #224c87;
+  --blue-mid:    #2a5c9e;
+  --blue-bright: #3570c0;
+  --red:         #da3832;
+  --red-soft:    #e05955;
+  --grey:        #919090;
+  --grey-light:  #c4c4c4;
+  --grey-dark:   #5a5959;
+  --off-white:   #e8edf6;
+  --white:       #ffffff;
+
+  --blue-05:  rgba(34,76,135,0.05);
+  --blue-10:  rgba(34,76,135,0.10);
+  --blue-18:  rgba(34,76,135,0.18);
+  --blue-25:  rgba(34,76,135,0.25);
+  --blue-40:  rgba(34,76,135,0.40);
+  --blue-60:  rgba(34,76,135,0.60);
+  --red-08:   rgba(218,56,50,0.08);
+  --red-18:   rgba(218,56,50,0.18);
+  --grey-08:  rgba(145,144,144,0.08);
+  --grey-15:  rgba(145,144,144,0.15);
+  --grey-25:  rgba(145,144,144,0.25);
+
+  --bg:       #060c1a;
+  --bg-deep:  #030810;
+  --bg-card:  rgba(7,14,32,0.96);
+  --border:   rgba(34,76,135,0.26);
+  --border-s: rgba(145,144,144,0.12);
+  --font:     'Montserrat', Arial, Verdana, sans-serif;
+  --r-sm:  8px; --r-md: 14px; --r-lg: 22px; --r-xl: 32px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--off-white);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--blue-60);border-radius:3px}
+
+/* ── BACKGROUNDS ── */
+.bg-base{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 80% 60% at 10% 10%,rgba(34,76,135,0.20) 0%,transparent 55%),
+             radial-gradient(ellipse 60% 50% at 90% 90%,rgba(218,56,50,0.08) 0%,transparent 50%),
+             radial-gradient(ellipse 120% 100% at 50% 50%,#08122a 0%,var(--bg) 70%)}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(34,76,135,0.055) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(34,76,135,0.055) 1px,transparent 1px);
+  background-size:52px 52px;
+  animation:gridDrift 70s linear infinite}
+@keyframes gridDrift{0%{background-position:0 0}100%{background-position:52px 52px}}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;animation:orbPulse ease-in-out infinite alternate}
+.o1{width:700px;height:700px;top:-250px;left:-200px;background:radial-gradient(circle,rgba(34,76,135,0.13) 0%,transparent 65%);animation-duration:20s}
+.o2{width:450px;height:450px;bottom:-120px;right:-100px;background:radial-gradient(circle,rgba(218,56,50,0.07) 0%,transparent 65%);animation-duration:25s;animation-delay:-10s}
+.o3{width:320px;height:320px;top:45%;right:15%;background:radial-gradient(circle,rgba(34,76,135,0.07) 0%,transparent 65%);animation-duration:17s;animation-delay:-5s}
+@keyframes orbPulse{from{transform:translate(0,0) scale(1)}to{transform:translate(25px,18px) scale(1.06)}}
+#starCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── PAGE SECTIONS ── */
+#landingPage,#tutorialPage,#calculatorPage{position:relative;z-index:1;min-height:100vh}
+
+/* ═══════════════════════════════
+   LANDING PAGE
+═══════════════════════════════ */
+#landingPage{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:40px 24px;min-height:100vh;
+}
+
+.landing-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+  color:var(--red-soft);border:1px solid rgba(218,56,50,0.35);
+  background:var(--red-08);padding:7px 16px;border-radius:30px;
+  margin-bottom:36px;
+  animation:fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.1s both
+}
+.landing-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--red-soft);animation:blink 1.8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+.landing-title{
+  font-size:clamp(38px,8vw,76px);font-weight:900;line-height:1.05;letter-spacing:-2px;
+  margin-bottom:24px;
+  background:linear-gradient(135deg,var(--off-white) 0%,var(--grey-light) 50%,var(--blue-bright) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.2s both
+}
+.landing-sub{
+  font-size:16px;font-weight:400;color:var(--grey);max-width:520px;margin:0 auto 48px;
+  line-height:1.8;
+  animation:fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.3s both
+}
+.landing-sub strong{color:var(--off-white);font-weight:700}
+
+.landing-cta-group{
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+  animation:fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.4s both
+}
+
+.btn-start{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:18px 44px;border-radius:50px;
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue-bright) 100%);
+  border:none;color:var(--white);font-family:var(--font);
+  font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:0 6px 40px rgba(34,76,135,0.45),0 1px 0 rgba(255,255,255,0.12) inset;
+  position:relative;overflow:hidden;
+}
+.btn-start .btn-arrow{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,0.18);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;transition:transform 0.3s;
+}
+.btn-start:hover{transform:translateY(-3px);box-shadow:0 14px 50px rgba(34,76,135,0.6)}
+.btn-start:hover .btn-arrow{transform:translateX(4px)}
+.btn-start::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
+  transition:left 0.5s
+}
+.btn-start:hover::before{left:100%}
+
+.btn-skip{
+  background:none;border:1px solid var(--border-s);
+  color:var(--grey);font-family:var(--font);font-size:12px;font-weight:600;
+  padding:10px 24px;border-radius:30px;cursor:pointer;
+  transition:all 0.25s;letter-spacing:0.5px;
+}
+.btn-skip:hover{border-color:var(--blue-40);color:var(--off-white);background:var(--blue-10)}
+
+/* Decorative data cards floating */
+.landing-cards{
+  display:flex;gap:20px;flex-wrap:wrap;justify-content:center;
+  margin-top:60px;
+  animation:fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.5s both
+}
+.l-card{
+  padding:18px 24px;border-radius:16px;
+  background:var(--bg-card);border:1px solid var(--border);
+  backdrop-filter:blur(20px);min-width:150px;text-align:center;
+  transition:transform 0.3s;
+}
+.l-card:hover{transform:translateY(-4px)}
+.l-card .lc-val{font-size:22px;font-weight:900;color:var(--off-white);letter-spacing:-0.5px}
+.l-card .lc-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey);margin-top:4px}
+
+.landing-footer{
+  position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+  font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:var(--grey-dark);
+  animation:fadeUp 0.8s ease 0.8s both
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════════════
+   STICKY HEADER (shared)
+═══════════════════════════════ */
+.site-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 28px;border-bottom:1px solid var(--border);
+  background:rgba(6,12,26,0.85);backdrop-filter:blur(24px);
+  position:sticky;top:0;z-index:200;
+}
+.hdr-left{display:flex;align-items:center;gap:14px}
+.logo-mark{
+  width:38px;height:38px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--blue),var(--blue-bright));
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:900;color:#fff;
+  box-shadow:0 0 22px rgba(34,76,135,0.5);
+  position:relative;overflow:hidden;
+}
+.logo-mark::after{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,0.1) 50%,transparent 70%);
+  animation:sheen 4s ease-in-out infinite
+}
+@keyframes sheen{0%,100%{transform:rotate(0deg)}50%{transform:rotate(360deg)}}
+.logo-mark span{font-size:14px;font-weight:900;color:#fff;letter-spacing:-0.5px}
+.hdr-text .eyebrow{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--grey)}
+.hdr-text .hdr-name{font-size:14px;font-weight:800;color:var(--off-white)}
+.hdr-badge{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--red-soft);border:1px solid rgba(218,56,50,0.35);
+  background:var(--red-08);padding:5px 12px;border-radius:20px}
+
+/* ═══════════════════════════════
+   TUTORIAL PAGE
+═══════════════════════════════ */
+#tutorialPage{display:none}
+.tut-container{max-width:860px;margin:0 auto;padding:0 24px 100px}
+
+.tut-progress-bar{
+  height:3px;background:var(--grey-15);
+  position:sticky;top:64px;z-index:100;
+}
+.tut-progress-fill{
+  height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-bright));
+  width:0%;transition:width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Lesson cards */
+.lesson{
+  padding:56px 0 0;
+  animation:lessonIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes lessonIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+.lesson-num{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+  color:var(--blue-bright);margin-bottom:14px;
+}
+.lesson-num::before,.lesson-num::after{
+  content:'';width:28px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--blue-bright),transparent);
+}
+.lesson h2{
+  font-size:clamp(26px,5vw,40px);font-weight:900;line-height:1.1;
+  margin-bottom:18px;letter-spacing:-0.5px;color:var(--off-white);
+}
+.lesson p{font-size:15px;font-weight:400;color:var(--grey);line-height:1.85;margin-bottom:18px}
+.lesson p strong{color:var(--off-white);font-weight:700}
+
+
+
+/* ── PLAIN LANG TUT BOX ── */
+.plain-lang-tut{
+  background:var(--blue-10);border:1px solid rgba(34,76,135,0.22);
+  border-left:3px solid var(--blue);border-radius:var(--r-sm);
+  padding:18px 22px;margin:28px 0;
+}
+.plt-title{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--blue-bright);margin-bottom:10px}
+.plain-lang-tut p{font-size:13px;font-weight:500;color:var(--grey-light);line-height:1.75;margin-bottom:0}
+.plain-lang-tut p strong{color:var(--off-white);font-weight:700}
+
+/* SWP Flow — text-based, no imagery */
+.swp-flow{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:28px 24px;margin:28px 0;
+}
+.swp-flow-row{
+  display:flex;align-items:stretch;gap:0;flex-wrap:wrap;
+}
+.swp-flow-cell{
+  flex:1;min-width:140px;padding:18px 16px;
+  background:rgba(255,255,255,0.02);border:1px solid var(--border-s);
+  border-radius:var(--r-md);text-align:center;margin:4px;
+  transition:all 0.2s;
+}
+.swp-flow-cell:hover{background:var(--blue-10);border-color:rgba(34,76,135,0.3);transform:translateY(-2px)}
+.swp-flow-cell.sfc-result{border-color:rgba(34,76,135,0.35);background:var(--blue-10)}
+.sfc-label{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey);margin-bottom:7px}
+.sfc-val{font-size:16px;font-weight:900;color:var(--off-white);margin-bottom:6px}
+.sfc-sub{font-size:10px;font-weight:500;color:var(--grey);line-height:1.5}
+.swp-flow-sep{
+  display:flex;align-items:center;padding:0 6px;
+  font-size:20px;color:var(--blue-40);flex-shrink:0;align-self:center;
+}
+@media(max-width:600px){
+  .swp-flow-row{flex-direction:column}
+  .swp-flow-sep{transform:rotate(90deg);align-self:center;padding:4px 0}
+}
+
+/* Concept chips */
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:28px 0}
+.concept-card{
+  padding:20px;border-radius:var(--r-md);
+  background:var(--bg-card);border:1px solid var(--border-s);
+  transition:all 0.2s;
+}
+.concept-card:hover{border-color:var(--blue-40);background:var(--blue-05);transform:translateY(-2px)}
+.concept-icon{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--blue-bright);text-transform:uppercase;margin-bottom:8px}
+.concept-name{font-size:14px;font-weight:800;color:var(--off-white);margin-bottom:6px}
+.concept-desc{font-size:11px;font-weight:500;color:var(--grey);line-height:1.6}
+
+/* Formula box */
+.formula-box{
+  background:rgba(6,12,26,0.98);border:1px solid var(--blue-40);
+  border-radius:var(--r-md);padding:24px 28px;margin:28px 0;
+  font-family:monospace;
+}
+.formula-label{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--blue-bright);margin-bottom:12px;font-family:var(--font)}
+.formula-main{font-size:17px;font-weight:700;color:var(--off-white);margin-bottom:14px;letter-spacing:0.3px;line-height:1.5}
+.formula-vars{display:flex;flex-wrap:wrap;gap:8px;font-family:var(--font)}
+.fvar{
+  padding:4px 12px;border-radius:6px;font-size:10px;font-weight:700;
+  background:var(--blue-18);border:1px solid var(--blue-25);color:var(--grey-light);
+}
+
+/* Step by step */
+.steps-visual{margin:28px 0;display:flex;flex-direction:column;gap:0}
+.sv-item{
+  display:flex;gap:20px;padding:20px 24px;
+  background:var(--bg-card);border:1px solid var(--border-s);
+  position:relative;
+}
+.sv-item:first-child{border-radius:var(--r-md) var(--r-md) 0 0}
+.sv-item:last-child{border-radius:0 0 var(--r-md) var(--r-md)}
+.sv-item+.sv-item{border-top:none}
+.sv-num{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--blue),var(--blue-bright));
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:900;color:#fff;
+  box-shadow:0 0 14px rgba(34,76,135,0.4);margin-top:2px;
+}
+.sv-content .sv-title{font-size:14px;font-weight:800;color:var(--off-white);margin-bottom:5px}
+.sv-content .sv-desc{font-size:12px;font-weight:500;color:var(--grey);line-height:1.6}
+
+/* Interactive mini demo */
+.mini-demo{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:28px 32px;margin:28px 0;
+}
+.mini-demo-title{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--grey);margin-bottom:20px}
+.demo-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.demo-label{font-size:11px;font-weight:700;color:var(--grey);min-width:180px;text-transform:uppercase;letter-spacing:0.5px}
+.demo-slider{flex:1;min-width:120px}
+.demo-val{
+  font-size:16px;font-weight:900;color:var(--off-white);
+  min-width:120px;text-align:right;letter-spacing:-0.3px;
+}
+.demo-result-bar{
+  background:rgba(255,255,255,0.04);border-radius:var(--r-md);
+  padding:16px 20px;margin-top:8px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.demo-result-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--grey)}
+.demo-result-val{font-size:20px;font-weight:900;color:var(--off-white);letter-spacing:-0.5px}
+
+/* Continue button */
+.tut-nav{display:flex;justify-content:space-between;align-items:center;margin:40px 0 0;flex-wrap:wrap;gap:14px}
+.btn-next{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 32px;border-radius:40px;
+  background:linear-gradient(135deg,var(--blue),var(--blue-bright));
+  border:none;color:#fff;font-family:var(--font);
+  font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  cursor:pointer;transition:all 0.25s;
+  box-shadow:0 4px 24px rgba(34,76,135,0.4);
+}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(34,76,135,0.55)}
+.btn-back-tut{
+  background:none;border:1px solid var(--border-s);
+  color:var(--grey);font-family:var(--font);font-size:11px;font-weight:700;
+  padding:10px 20px;border-radius:30px;cursor:pointer;transition:all 0.2s;
+}
+.btn-back-tut:hover{border-color:var(--blue-40);color:var(--off-white)}
+
+.lesson-divider{height:1px;background:var(--border-s);margin:48px 0}
+
+/* ═══════════════════════════════
+   CALCULATOR PAGE
+═══════════════════════════════ */
+#calculatorPage{display:none}
+.calc-container{max-width:1000px;margin:0 auto;padding:0 24px 80px}
+
+/* Hero banner above calculator */
+.calc-hero{text-align:center;padding:52px 0 44px;animation:fadeUp 0.7s ease both}
+.calc-hero-tag{display:inline-flex;align-items:center;gap:8px;font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--blue-bright);margin-bottom:16px}
+.calc-hero-tag::before,.calc-hero-tag::after{content:'';width:30px;height:1px;background:linear-gradient(90deg,transparent,var(--blue-bright),transparent)}
+.calc-hero h1{font-size:clamp(28px,5vw,46px);font-weight:900;line-height:1.08;margin-bottom:14px;letter-spacing:-1px;
+  background:linear-gradient(135deg,var(--off-white) 0%,var(--grey-light) 55%,var(--blue-bright) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.calc-hero p{font-size:14px;color:var(--grey);max-width:500px;margin:0 auto;line-height:1.75}
+
+/* Main card */
+.calc-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r-xl);overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.55),0 2px 0 rgba(34,76,135,0.35) inset;
+  transform-style:preserve-3d;transition:transform 0.12s ease;
+  position:relative;
+}
+.calc-card::before{
+  content:'';position:absolute;top:0;left:8%;right:8%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--blue-60),rgba(255,255,255,0.5),var(--blue-60),transparent);
+  animation:topGlow 5s ease-in-out infinite;
+}
+@keyframes topGlow{0%,100%{opacity:0.6;left:8%;right:8%}50%{opacity:1;left:3%;right:3%}}
+
+/* Card panels */
+.c-panel{padding:36px 40px;border-bottom:1px solid var(--border-s)}
+.c-panel:last-child{border-bottom:none}
+
+.p-head{margin-bottom:24px}
+.p-num{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--blue-bright);opacity:0.7}
+.p-title{font-size:19px;font-weight:900;color:var(--off-white);margin-top:4px}
+.p-sub{font-size:12px;font-weight:400;color:var(--grey);margin-top:4px;line-height:1.5}
+
+/* Plain language box */
+.plain-box{
+  background:var(--blue-10);border:1px solid rgba(34,76,135,0.22);
+  border-left:3px solid var(--blue);border-radius:var(--r-sm);
+  padding:14px 18px;margin-bottom:24px;
+  font-size:12px;font-weight:500;color:var(--grey-light);line-height:1.7;
+}
+.plain-box strong{color:var(--off-white);font-weight:700}
+
+/* Input components */
+.inp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
+.inp-block{display:flex;flex-direction:column;gap:6px}
+.inp-lrow{display:flex;justify-content:space-between;align-items:center}
+.inp-label{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey)}
+.inp-hint{font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;background:var(--blue-10);color:var(--blue-bright);letter-spacing:0.5px}
+
+.inp-outer{
+  position:relative;background:rgba(255,255,255,0.03);
+  border:1px solid var(--border-s);border-radius:var(--r-md);
+  transition:border-color 0.2s,background 0.2s,box-shadow 0.2s;overflow:hidden;
+}
+.inp-outer:focus-within{
+  border-color:var(--blue-mid);background:var(--blue-05);
+  box-shadow:0 0 0 3px rgba(34,76,135,0.16),0 0 30px rgba(34,76,135,0.18);
+}
+.inp-outer::after{
+  content:'';position:absolute;bottom:0;left:0;right:100%;height:2px;
+  background:linear-gradient(90deg,var(--blue),var(--blue-bright));
+  transition:right 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.inp-outer:focus-within::after{right:0}
+.inp-prefix{
+  position:absolute;left:0;top:0;bottom:0;
+  display:flex;align-items:center;padding:0 14px;
+  font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:var(--grey);border-right:1px solid var(--border-s);
+  background:rgba(255,255,255,0.02);white-space:nowrap;
+}
+.inp-row{display:flex;align-items:center;padding:13px 16px 13px 90px}
+.inp-row input{
+  background:transparent;border:none;outline:none;
+  font-family:var(--font);font-size:20px;font-weight:900;
+  color:var(--off-white);width:100%;letter-spacing:-0.5px;
+  -moz-appearance:textfield;
+}
+.inp-row input::-webkit-outer-spin-button,
+.inp-row input::-webkit-inner-spin-button{-webkit-appearance:none}
+.inp-unit{font-size:10px;font-weight:700;color:var(--grey);flex-shrink:0;margin-left:6px}
+
+/* Slider */
+.sl-row{padding:4px 0 2px}
+.sl-minmax{display:flex;justify-content:space-between;font-size:9px;font-weight:600;color:var(--grey-dark);margin-bottom:5px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:3px;border-radius:2px;outline:none;background:var(--grey-25);cursor:pointer;margin:0;padding:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-bright));border:2px solid rgba(255,255,255,0.22);box-shadow:0 0 14px rgba(34,76,135,0.55);transition:transform 0.15s;cursor:grab}
+input[type=range]::-webkit-slider-thumb:active{transform:scale(1.4);cursor:grabbing}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-bright));border:2px solid rgba(255,255,255,0.22);cursor:grab}
+
+/* Withdrawal mode toggle */
+.mode-toggle{display:flex;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--border);margin-bottom:22px}
+.mode-btn{flex:1;padding:11px 16px;text-align:center;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.22s;color:var(--grey);background:var(--grey-08);border:none;font-family:var(--font)}
+.mode-btn.active{background:var(--blue);color:var(--white)}
+.mode-btn:hover:not(.active){color:var(--off-white);background:var(--blue-18)}
+
+/* Scenario chips */
+.sc-group-label{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--grey);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.sc-group-label::after{content:'';flex:1;height:1px;background:var(--border-s)}
+.sc-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.sc-chip{
+  padding:8px 16px;border-radius:30px;font-size:10px;font-weight:700;letter-spacing:0.3px;
+  cursor:pointer;transition:all 0.22s;border:1px solid var(--border-s);
+  background:var(--grey-08);color:var(--grey);user-select:none;
+}
+.sc-chip:hover{border-color:var(--blue-mid);color:var(--off-white);background:var(--blue-10)}
+.sc-chip.active{background:var(--blue-25);border-color:var(--blue-mid);color:var(--off-white);box-shadow:0 4px 16px rgba(34,76,135,0.28)}
+
+/* Assumption pills */
+.assm-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.assm-pill{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:20px;
+  background:var(--blue-10);border:1px solid rgba(34,76,135,0.22);
+  font-size:10px;font-weight:700;color:var(--grey-light);cursor:pointer;transition:all 0.2s;
+}
+.assm-pill:hover{background:var(--blue-18);border-color:rgba(34,76,135,0.4)}
+.assm-pill .pk{color:var(--grey);font-weight:600}
+.assm-pill .pv{color:var(--off-white);font-weight:800}
+.assm-pill .pe{font-size:8px;color:var(--grey);margin-left:2px}
+
+/* Calculate button */
+.calc-btn-wrap{padding:28px 40px}
+.calc-btn{
+  width:100%;padding:17px;border-radius:var(--r-md);
+  background:linear-gradient(135deg,var(--blue),var(--blue-bright));
+  border:none;color:#fff;font-family:var(--font);
+  font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;transition:all 0.3s;
+  box-shadow:0 4px 24px rgba(34,76,135,0.4),0 1px 0 rgba(255,255,255,0.1) inset;
+  position:relative;overflow:hidden;
+}
+.calc-btn::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
+  transition:left 0.45s;
+}
+.calc-btn:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(34,76,135,0.55)}
+.calc-btn:hover::before{left:100%}
+.calc-btn:active{transform:translateY(0)}
+.calc-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+
+/* ═══ RESULTS ═══ */
+#resultsSection{display:none}
+
+/* Animated entrance */
+.results-appear{animation:resultsIn 0.8s cubic-bezier(0.16,1,0.3,1) both}
+@keyframes resultsIn{from{opacity:0;transform:translateY(40px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* Hero result */
+.res-hero{
+  padding:44px 40px;text-align:center;
+  background:linear-gradient(135deg,rgba(34,76,135,0.22) 0%,rgba(8,16,38,0.4) 100%);
+  border-bottom:1px solid var(--border);position:relative;overflow:hidden;
+}
+.res-hero::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(34,76,135,0.18) 0%,transparent 65%);
+  pointer-events:none;
+}
+.res-hero-eyebrow{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--grey);margin-bottom:10px}
+.res-hero-val{
+  font-size:clamp(52px,11vw,88px);font-weight:900;
+  color:var(--off-white);line-height:1;letter-spacing:-3px;margin-bottom:6px;
+  position:relative;z-index:1;
+}
+.res-hero-val.counting{animation:countPop 0.4s cubic-bezier(0.34,1.56,0.64,1) both}
+@keyframes countPop{0%{transform:scale(0.8);opacity:0}100%{transform:scale(1);opacity:1}}
+.res-hero-unit{font-size:13px;font-weight:600;color:var(--grey);margin-bottom:5px}
+.res-hero-sub{font-size:12px;font-weight:500;color:var(--grey);max-width:500px;margin:0 auto;line-height:1.7}
+
+/* Stats row */
+.res-stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border)}
+.res-stat{
+  padding:26px 22px;text-align:center;border-right:1px solid var(--border-s);
+  transition:background 0.2s;
+}
+.res-stat:last-child{border-right:none}
+.res-stat:hover{background:var(--blue-05)}
+.rs-label{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey);margin-bottom:7px}
+.rs-val{
+  font-size:21px;font-weight:900;color:var(--off-white);letter-spacing:-0.5px;
+  animation:statRise 0.6s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes statRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.rs-val.col-b{color:rgba(120,170,220,1)}
+.rs-val.col-r{color:rgba(230,130,125,1)}
+.rs-unit{font-size:9px;color:var(--grey-dark);margin-top:3px}
+
+/* Sustainability */
+.sustain-wrap{padding:28px 40px;border-bottom:1px solid var(--border-s)}
+.sustain-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.sustain-title{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--grey)}
+.sustain-badge{font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px}
+.sb-good   {background:rgba(34,76,135,0.28);color:rgba(150,200,255,1);border:1px solid rgba(34,76,135,0.5)}
+.sb-caution{background:rgba(145,144,144,0.18);color:var(--grey-light);border:1px solid var(--grey-25)}
+.sb-low    {background:rgba(218,56,50,0.2);color:rgba(240,160,155,1);border:1px solid rgba(218,56,50,0.4)}
+.bar-track{height:8px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden;margin-bottom:10px}
+.bar-fill{
+  height:100%;border-radius:4px;width:0%;
+  background:linear-gradient(90deg,var(--blue),var(--blue-bright) 50%,var(--red));
+  background-size:200% 100%;animation:barMove 4s linear infinite;
+  transition:width 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes barMove{0%{background-position:0% 0}100%{background-position:200% 0}}
+.bar-marks{display:flex;justify-content:space-between;font-size:9px;color:var(--grey-dark);font-weight:700}
+.sustain-desc{font-size:11px;color:var(--grey);margin-top:12px;line-height:1.65}
+
+/* Insight cards */
+.insights-wrap{padding:28px 40px;border-bottom:1px solid var(--border-s)}
+.insights-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px}
+.ins-card{
+  padding:18px;border-radius:var(--r-md);
+  background:var(--grey-08);border:1px solid var(--border-s);
+  transition:all 0.22s;
+  animation:insIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes insIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.ins-card:hover{background:var(--blue-10);border-color:rgba(34,76,135,0.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.2)}
+.ins-head{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey);margin-bottom:6px}
+.ins-val{font-size:17px;font-weight:900;color:var(--off-white);margin-bottom:5px}
+.ins-desc{font-size:10px;font-weight:500;color:var(--grey);line-height:1.55}
+
+/* Chart */
+.chart-wrap{padding:28px 40px;border-bottom:1px solid var(--border-s)}
+.chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.chart-title{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--grey)}
+.chart-legend{display:flex;gap:16px;font-size:9px;font-weight:700;color:var(--grey);letter-spacing:1px}
+.cl-item{display:flex;align-items:center;gap:6px}
+.cl-line{width:18px;height:2px;border-radius:1px}
+.chart-canvas-wrap{position:relative;height:220px}
+canvas#corpusChart{display:block}
+
+/* Year table */
+.table-wrap-outer{padding:0 40px 28px}
+.table-inner{border-radius:var(--r-md);overflow:hidden;border:1px solid var(--border-s);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{background:rgba(34,76,135,0.18)}
+th{padding:11px 16px;text-align:left;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey-light)}
+td{padding:10px 16px;font-weight:500;color:var(--grey-light);white-space:nowrap}
+tbody tr{border-top:1px solid rgba(255,255,255,0.04);transition:background 0.15s}
+tbody tr:hover{background:var(--blue-05)}
+.td-n{font-weight:800;color:var(--off-white);font-size:13px}
+.td-p{color:rgba(120,180,240,1);font-weight:700}
+.td-m{color:rgba(230,130,125,1);font-weight:700}
+.s-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:800;letter-spacing:0.8px;text-transform:uppercase}
+.s-ok  {background:rgba(34,76,135,0.28);color:rgba(150,200,255,1)}
+.s-mid {background:rgba(145,144,144,0.18);color:var(--grey-light)}
+.s-end {background:rgba(218,56,50,0.22);color:rgba(240,160,155,1)}
+
+/* Disclaimer */
+.disclaimer{
+  margin:0 40px 36px;padding:14px 18px;border-radius:var(--r-sm);
+  background:var(--grey-08);border:1px solid var(--grey-15);border-left:3px solid var(--grey);
+  font-size:10px;line-height:1.85;color:var(--grey);
+}
+.disclaimer strong{color:var(--grey-light);font-weight:800}
+
+/* Recalculate */
+.recalc-row{padding:0 40px 36px;display:flex;justify-content:center}
+.btn-recalc{
+  padding:11px 28px;border-radius:30px;
+  background:none;border:1px solid var(--border);
+  color:var(--grey);font-family:var(--font);font-size:11px;font-weight:700;
+  cursor:pointer;transition:all 0.22s;letter-spacing:0.5px;
+}
+.btn-recalc:hover{border-color:var(--blue-mid);color:var(--off-white);background:var(--blue-10)}
+
+/* Section label */
+.s-label{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--grey);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.s-label::after{content:'';flex:1;height:1px;background:var(--border-s)}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 0.55s ease,transform 0.55s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ══════════════════════════════════════════════
+   VOICE ASSISTANT — floating button + panel
+══════════════════════════════════════════════ */
+#voiceBtn{
+  position:fixed;bottom:24px;right:24px;z-index:500;
+  width:58px;height:58px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,var(--blue),var(--blue-bright));
+  box-shadow:0 6px 28px rgba(34,76,135,0.55),0 2px 0 rgba(255,255,255,0.1) inset;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+#voiceBtn:hover{transform:scale(1.08);box-shadow:0 10px 36px rgba(34,76,135,0.65)}
+#voiceBtn:active{transform:scale(0.95)}
+#voiceBtn.speaking{
+  background:linear-gradient(135deg,var(--red),var(--red-soft));
+  box-shadow:0 6px 28px rgba(218,56,50,0.55);
+  animation:voicePulse 1.2s ease-in-out infinite;
+}
+@keyframes voicePulse{
+  0%,100%{box-shadow:0 6px 28px rgba(218,56,50,0.55),0 0 0 0 rgba(218,56,50,0.4)}
+  50%{box-shadow:0 6px 28px rgba(218,56,50,0.55),0 0 0 12px rgba(218,56,50,0)}
+}
+.voice-icon{width:24px;height:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.voice-bar{
+  width:3px;border-radius:2px;
+  background:#fff;
+  transition:height 0.15s ease;
+}
+.voice-bar-1{height:6px}.voice-bar-2{height:14px}.voice-bar-3{height:10px}.voice-bar-4{height:18px}.voice-bar-5{height:6px}
+#voiceBtn.speaking .voice-bar{animation:barDance 0.6s ease-in-out infinite alternate}
+#voiceBtn.speaking .voice-bar-1{animation-delay:0s}
+#voiceBtn.speaking .voice-bar-2{animation-delay:0.1s}
+#voiceBtn.speaking .voice-bar-3{animation-delay:0.2s}
+#voiceBtn.speaking .voice-bar-4{animation-delay:0.3s}
+#voiceBtn.speaking .voice-bar-5{animation-delay:0.4s}
+@keyframes barDance{from{height:4px}to{height:20px}}
+
+/* Voice panel */
+#voicePanel{
+  position:fixed;bottom:96px;right:24px;z-index:499;
+  width:min(320px,calc(100vw - 48px));
+  background:rgba(7,14,32,0.97);
+  border:1px solid var(--border);border-radius:var(--r-lg);
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  overflow:hidden;
+  transform:scale(0.9) translateY(12px);opacity:0;pointer-events:none;
+  transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+  transform-origin:bottom right;
+}
+#voicePanel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all}
+.vp-head{
+  padding:14px 18px;border-bottom:1px solid var(--border-s);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.vp-title{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey-light)}
+.vp-close{
+  background:none;border:none;color:var(--grey);cursor:pointer;
+  font-size:18px;line-height:1;padding:0 2px;
+  -webkit-tap-highlight-color:transparent;
+}
+.vp-status{
+  padding:12px 18px;
+  font-size:11px;color:var(--grey);font-weight:500;line-height:1.6;
+  min-height:48px;border-bottom:1px solid var(--border-s);
+  transition:color 0.2s;
+}
+.vp-status.active{color:var(--off-white)}
+.vp-actions{padding:12px 18px;display:flex;flex-direction:column;gap:8px}
+.vp-btn{
+  width:100%;padding:10px 16px;border-radius:var(--r-md);border:1px solid var(--border-s);
+  background:var(--grey-08);color:var(--grey-light);
+  font-family:var(--font);font-size:10px;font-weight:700;letter-spacing:0.5px;
+  cursor:pointer;text-align:left;transition:all 0.2s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.vp-btn:hover,.vp-btn:focus{background:var(--blue-18);border-color:rgba(34,76,135,0.4);color:var(--off-white)}
+.vp-btn.primary{
+  background:linear-gradient(135deg,var(--blue),var(--blue-bright));
+  border-color:transparent;color:#fff;
+  box-shadow:0 3px 14px rgba(34,76,135,0.35);
+}
+.vp-btn.primary:hover{box-shadow:0 6px 20px rgba(34,76,135,0.5);transform:translateY(-1px)}
+.vp-speed-row{display:flex;gap:6px;align-items:center}
+.vp-speed-label{font-size:9px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:1px;min-width:44px}
+.vp-speed-btns{display:flex;gap:4px;flex:1}
+.speed-chip{
+  flex:1;padding:6px 4px;border-radius:6px;border:1px solid var(--border-s);
+  background:var(--grey-08);color:var(--grey);
+  font-family:var(--font);font-size:10px;font-weight:700;
+  cursor:pointer;text-align:center;transition:all 0.15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.speed-chip.active{background:var(--blue-25);border-color:rgba(34,76,135,0.5);color:var(--off-white)}
+.vp-note{
+  padding:10px 18px;font-size:9px;color:var(--grey-dark);
+  border-top:1px solid var(--border-s);line-height:1.5;
+}
+
+/* ══════════════════════════════════════════════
+   MOBILE & iOS FIXES — comprehensive
+══════════════════════════════════════════════ */
+
+/* iOS safe area insets */
+body{
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  -webkit-overflow-scrolling:touch;
+}
+
+/* Prevent iOS zoom on input focus */
+input[type="number"],
+input[type="range"]{
+  font-size:16px!important;/* iOS requires ≥16px to prevent auto-zoom */
+}
+
+/* Fix iOS input appearance */
+input[type="number"]{
+  -webkit-appearance:none;
+  -moz-appearance:textfield;
+}
+
+/* Touch targets — minimum 44×44px (WCAG 2.5.5) */
+button,.mode-btn,.sc-chip,.speed-chip,.vp-btn{
+  min-height:44px;
+}
+.sc-chip,.speed-chip{min-height:36px} /* small chips exempt at 36px min */
+.vp-close{min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center}
+
+/* Fix sticky header on iOS — position:sticky needs explicit height context */
+.site-header{
+  -webkit-position:sticky;
+  position:sticky;
+}
+
+/* Prevent iOS rubber-band scroll bleed through fixed panels */
+#voicePanel{
+  -webkit-overflow-scrolling:touch;
+}
+
+/* Fix backdrop-filter for Safari */
+@supports not (backdrop-filter:blur(1px)){
+  .site-header,#voicePanel{background:rgba(6,12,26,0.98)!important}
+}
+
+/* ── RESPONSIVE: 760px ── */
+@media(max-width:760px){
+  /* Calculator panels */
+  .c-panel,.calc-btn-wrap,.res-hero,
+  .sustain-wrap,.insights-wrap,.chart-wrap,
+  .table-wrap-outer,.recalc-row,.disclaimer{
+    padding-left:16px;padding-right:16px;
+  }
+
+  /* Stats stack vertically */
+  .res-stats{grid-template-columns:1fr}
+  .res-stat{border-right:none;border-bottom:1px solid var(--border-s)}
+  .res-stat:last-child{border-bottom:none}
+
+  /* SWP flow stacks */
+  .swp-flow-row{flex-direction:column}
+  .swp-flow-sep{transform:rotate(90deg);align-self:center;padding:4px 0}
+
+  /* Header: hide eyebrow on tight screens */
+  .eyebrow{display:none}
+  .hdr-name{font-size:13px}
+
+  /* Tut nav wraps */
+  .tut-nav{flex-direction:column;gap:10px}
+  .tut-nav .btn-next,.tut-nav .btn-back-tut{width:100%;text-align:center;justify-content:center}
+
+  /* Mode toggle */
+  .mode-btn{font-size:9px;padding:10px 8px}
+
+  /* Insights grid: 2 col */
+  .insights-grid{grid-template-columns:repeat(2,1fr)}
+
+  /* Scenario chips wrap nicely */
+  .sc-chips{gap:6px}
+  .sc-chip{font-size:9px;padding:7px 12px}
+
+  /* Landing cards: 2×2 grid */
+  .landing-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:380px}
+
+  /* Landing CTA group */
+  .landing-cta-group{width:100%;max-width:360px}
+  .btn-start{width:100%;justify-content:center}
+  .btn-skip{width:100%}
+
+  /* Demo row stacks */
+  .demo-row{flex-direction:column;align-items:flex-start;gap:6px}
+  .demo-label{min-width:unset}
+  .demo-slider{width:100%}
+  .demo-val{font-size:14px}
+
+  /* Formula box */
+  .formula-main{font-size:14px}
+
+  /* Voice btn position: above mobile bottom nav area */
+  #voiceBtn{bottom:calc(20px + env(safe-area-inset-bottom,0px));right:18px}
+  #voicePanel{right:18px;bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+
+  /* Chart height reduced */
+  .chart-canvas-wrap{height:170px}
+
+  /* Assumption pills row scroll */
+  .assm-row{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+  .assm-pill{flex-shrink:0}
+}
+
+/* ── RESPONSIVE: 480px ── */
+@media(max-width:480px){
+  .inp-grid{grid-template-columns:1fr}
+  .landing-title{font-size:clamp(34px,10vw,54px);letter-spacing:-1px}
+  .landing-sub{font-size:14px}
+
+  /* Single column insights on smallest screens */
+  .insights-grid{grid-template-columns:1fr}
+
+  /* Res hero value smaller */
+  .res-hero-val{font-size:clamp(42px,13vw,72px)}
+
+  /* Lesson headings */
+  .lesson h2{font-size:clamp(22px,6vw,32px)}
+
+  /* Step indicator compact */
+  .sv-item{padding:14px 16px;gap:12px}
+
+  /* Concept grid: 1 col */
+  .concept-grid{grid-template-columns:1fr}
+
+  /* Table: reduce padding */
+  th,td{padding:8px 10px;font-size:11px}
+  .td-n{font-size:11px}
+
+  /* Voice panel full-width on very small */
+  #voicePanel{left:16px;right:16px;width:auto}
+}
+
+/* ── TOUCH / HOVER media ── */
+@media(hover:none){
+  /* Remove hover-only transforms that can get stuck on touch */
+  .calc-card:hover{transform:none!important}
+  .l-card:hover{transform:none!important}
+  .concept-card:hover{transform:none!important}
+  .ins-card:hover{transform:none!important}
+  .swp-flow-cell:hover{transform:none!important}
+}
+
+/* ── REDUCED MOTION (accessibility) ── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms!important;
+    transition-duration:0.01ms!important;
+  }
+  .reveal{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+
+/* Hidden helper */
+.hidden-block{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- Backgrounds -->
+<div class="bg-base" aria-hidden="true"></div>
+<div class="bg-grid"  aria-hidden="true"></div>
+<div class="orb o1"   aria-hidden="true"></div>
+<div class="orb o2"   aria-hidden="true"></div>
+<div class="orb o3"   aria-hidden="true"></div>
+<canvas id="starCanvas" aria-hidden="true"></canvas>
+
+<!-- ═══════════════════════════════
+     LANDING PAGE
+═══════════════════════════════ -->
+<div id="landingPage" role="main">
+
+  <div class="landing-badge" role="note">
+    <span class="dot" aria-hidden="true"></span>
+    Co-Sponsored by HDFC Mutual Fund · Technex 2026
+  </div>
+
+  <h1 class="landing-title">FinCal<br>SWP Calculator</h1>
+
+  <p class="landing-sub">
+    Turn your savings into a <strong>monthly income</strong> — and find out
+    exactly how long it will last. No financial background needed.
+  </p>
+
+  <div class="landing-cta-group">
+    <button class="btn-start" id="btnStartLearning" aria-label="Start learning about SWP — begins with an interactive tutorial">
+      Start Learning
+      <span class="btn-arrow" aria-hidden="true">&#8594;</span>
+    </button>
+    <button class="btn-skip" id="btnSkipToCalc" aria-label="Skip tutorial and go directly to the calculator">
+      Skip to Calculator
+    </button>
+  </div>
+
+  <div class="landing-cards" aria-label="Quick facts about SWP" role="list">
+    <div class="l-card" role="listitem">
+      <div class="lc-val">SWP</div>
+      <div class="lc-label">Systematic Withdrawal</div>
+    </div>
+    <div class="l-card" role="listitem">
+      <div class="lc-val">Monthly</div>
+      <div class="lc-label">Regular Income</div>
+    </div>
+    <div class="l-card" role="listitem">
+      <div class="lc-val">Flexible</div>
+      <div class="lc-label">You Set the Amount</div>
+    </div>
+    <div class="l-card" role="listitem">
+      <div class="lc-val">Illustrative</div>
+      <div class="lc-label">Educational Tool</div>
+    </div>
+  </div>
+
+  <p class="landing-footer" aria-hidden="true">FinCal Innovation · Hackathon · Technex 2026</p>
+</div>
+
+
+<!-- ═══════════════════════════════
+     TUTORIAL PAGE
+═══════════════════════════════ -->
+<div id="tutorialPage" aria-label="Learning tutorial">
+
+  <header class="site-header" role="banner">
+    <div class="hdr-left">
+      <div class="logo-mark" aria-hidden="true"><span>FC</span></div>
+      <div class="hdr-text">
+        <div class="eyebrow">FinCal Innovation · Technex 2026</div>
+        <div class="hdr-name">Learn: What is SWP?</div>
+      </div>
+    </div>
+    <div class="hdr-badge" role="note">HDFC Mutual Fund</div>
+  </header>
+
+  <div class="tut-progress-bar" role="progressbar" aria-label="Tutorial progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="tutProgressWrap">
+    <div class="tut-progress-fill" id="tutProgress"></div>
+  </div>
+
+  <div class="tut-container">
+
+    <!-- LESSON 1 -->
+    <article class="lesson" id="lesson1" aria-labelledby="l1h">
+      <div class="lesson-num" aria-hidden="true">Lesson 1 of 4</div>
+      <h2 id="l1h">Your savings can pay you every month</h2>
+      <p>
+        Most of us think of savings as money we <strong>store</strong> — locked away for a rainy day.
+        But what if your savings could <strong>pay you a salary</strong> every single month,
+        without you having to work for it?
+      </p>
+      <p>
+        That is exactly what a <strong>Systematic Withdrawal Plan (SWP)</strong> does.
+        You invest a lump sum of money into a mutual fund.
+        Every month, a fixed amount is automatically transferred to your bank account.
+        The remaining money stays invested and continues to grow.
+      </p>
+
+      <div class="plain-lang-tut" role="note">
+        <div class="plt-title">How it works in simple terms</div>
+        <p>
+          You invest a lump sum — say, 50 Lakh — into a mutual fund.
+          Each month, the fund automatically transfers a fixed amount, say 30,000, into your bank account.
+          The remaining 49 Lakh and 70,000 stays invested and earns returns.
+          This continues month after month. The key question is: <strong>how long before the money runs out?</strong>
+          That depends on how much you withdraw versus how much the investment earns.
+          This calculator answers exactly that question.
+        </p>
+      </div>
+
+      <!-- SWP flow — text-based, no imagery -->
+      <div class="swp-flow" role="region" aria-label="How SWP works step by step">
+        <div class="swp-flow-row">
+          <div class="swp-flow-cell">
+            <div class="sfc-label">You invest</div>
+            <div class="sfc-val">Lump Sum</div>
+            <div class="sfc-sub">One-time investment into a mutual fund</div>
+          </div>
+          <div class="swp-flow-sep" aria-hidden="true">&#8594;</div>
+          <div class="swp-flow-cell">
+            <div class="sfc-label">Each month</div>
+            <div class="sfc-val">Fixed Payout</div>
+            <div class="sfc-sub">Transferred to your bank account automatically</div>
+          </div>
+          <div class="swp-flow-sep" aria-hidden="true">&#8594;</div>
+          <div class="swp-flow-cell">
+            <div class="sfc-label">Rest stays invested</div>
+            <div class="sfc-val">Earns Returns</div>
+            <div class="sfc-sub">Remaining balance continues to grow</div>
+          </div>
+          <div class="swp-flow-sep" aria-hidden="true">&#8594;</div>
+          <div class="swp-flow-cell sfc-result">
+            <div class="sfc-label">The question</div>
+            <div class="sfc-val">How long?</div>
+            <div class="sfc-sub">This calculator tells you the answer</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tut-nav">
+        <button class="btn-back-tut" id="l1back" onclick="showLanding()">Back to Home</button>
+        <button class="btn-next" id="l1next" onclick="goLesson(2)">Next: What is a Mutual Fund? &#8594;</button>
+      </div>
+    </article>
+
+    <div class="lesson-divider" aria-hidden="true"></div>
+
+    <!-- LESSON 2 -->
+    <article class="lesson hidden-block" id="lesson2" aria-labelledby="l2h">
+      <div class="lesson-num" aria-hidden="true">Lesson 2 of 4</div>
+      <h2 id="l2h">What exactly is a mutual fund?</h2>
+      <p>
+        A <strong>mutual fund</strong> is a pool of money collected from many investors.
+        A professional fund manager invests this pool into stocks, bonds, and other assets.
+        Your money grows because these investments generate returns over time.
+      </p>
+      <p>
+        You do not need to be an expert to invest in a mutual fund.
+        You simply put in money, and a team of professionals manages it for you.
+        When you want your money back, you can withdraw it — that is where SWP comes in.
+      </p>
+
+      <div class="concept-grid" role="list">
+        <div class="concept-card" role="listitem">
+          <div class="concept-icon">Term 01</div>
+          <div class="concept-name">Corpus</div>
+          <div class="concept-desc">The total amount of money you invest. If you invest 50 Lakh, that is your corpus. It is the starting balance of your SWP.</div>
+        </div>
+        <div class="concept-card" role="listitem">
+          <div class="concept-icon">Term 02</div>
+          <div class="concept-name">Return Rate</div>
+          <div class="concept-desc">How fast your invested money grows each year, shown as a percentage. For example, 8% means 100 becomes 108 in one year.</div>
+        </div>
+        <div class="concept-card" role="listitem">
+          <div class="concept-icon">Term 03</div>
+          <div class="concept-name">Inflation</div>
+          <div class="concept-desc">The rate at which prices rise over time. If inflation is 5%, something costing 1,000 today will cost 1,050 next year.</div>
+        </div>
+        <div class="concept-card" role="listitem">
+          <div class="concept-icon">Term 04</div>
+          <div class="concept-name">Withdrawal</div>
+          <div class="concept-desc">The fixed amount you take out of your corpus each month. Think of it as your monthly income from savings.</div>
+        </div>
+      </div>
+
+      <div class="tut-nav">
+        <button class="btn-back-tut" onclick="goLesson(1)">&#8592; Back</button>
+        <button class="btn-next" onclick="goLesson(3)">Next: The Maths Behind It &#8594;</button>
+      </div>
+    </article>
+
+    <div class="lesson-divider hidden-block" id="div2" aria-hidden="true"></div>
+
+    <!-- LESSON 3 -->
+    <article class="lesson hidden-block" id="lesson3" aria-labelledby="l3h">
+      <div class="lesson-num" aria-hidden="true">Lesson 3 of 4</div>
+      <h2 id="l3h">How does the calculation work?</h2>
+      <p>
+        The calculator uses a standard financial formula to figure out how your corpus
+        changes every month. At the start of each month, your corpus earns interest.
+        Then your withdrawal is deducted. What remains becomes next month's starting balance.
+      </p>
+
+      <div class="steps-visual" role="list">
+        <div class="sv-item" role="listitem">
+          <div class="sv-num" aria-hidden="true">1</div>
+          <div class="sv-content">
+            <div class="sv-title">Your corpus earns interest this month</div>
+            <div class="sv-desc">The remaining balance grows at the assumed annual return rate, divided by 12 for a monthly rate. For example, 8% per year becomes 0.67% per month.</div>
+          </div>
+        </div>
+        <div class="sv-item" role="listitem">
+          <div class="sv-num" aria-hidden="true">2</div>
+          <div class="sv-content">
+            <div class="sv-title">Your withdrawal is deducted</div>
+            <div class="sv-desc">The fixed monthly amount you chose is subtracted from the corpus. This is the money transferred to your bank account.</div>
+          </div>
+        </div>
+        <div class="sv-item" role="listitem">
+          <div class="sv-num" aria-hidden="true">3</div>
+          <div class="sv-content">
+            <div class="sv-title">The remaining balance carries forward</div>
+            <div class="sv-desc">Whatever is left becomes the opening balance for the next month. This process repeats every month until the corpus runs out or you stop.</div>
+          </div>
+        </div>
+        <div class="sv-item" role="listitem">
+          <div class="sv-num" aria-hidden="true">4</div>
+          <div class="sv-content">
+            <div class="sv-title">The result: how many months your money lasts</div>
+            <div class="sv-desc">The calculator counts how many months pass before the balance reaches zero — or tells you if the corpus is self-sustaining forever because the interest exceeds the withdrawal.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula-box" role="note" aria-label="SWP formula">
+        <div class="formula-label">The Formula Used in This Calculator</div>
+        <div class="formula-main">Balance(n) = Balance(n-1) &times; (1 + r) &minus; W</div>
+        <div class="formula-vars">
+          <span class="fvar">r = Annual Return / 12</span>
+          <span class="fvar">W = Monthly Withdrawal</span>
+          <span class="fvar">n = Month number</span>
+        </div>
+      </div>
+
+      <!-- Interactive mini demo -->
+      <div class="mini-demo" role="region" aria-label="Interactive preview of how changing your withdrawal affects duration">
+        <div class="mini-demo-title">Try it — see the effect instantly</div>
+        <div class="demo-row">
+          <label class="demo-label" for="demoCorpus">Your Savings</label>
+          <input type="range" class="demo-slider" id="demoCorpus" min="500000" max="20000000" step="100000" value="5000000" aria-label="Demo savings amount">
+          <div class="demo-val" id="demoCorpusVal">50 Lakh</div>
+        </div>
+        <div class="demo-row">
+          <label class="demo-label" for="demoW">Monthly Withdrawal</label>
+          <input type="range" class="demo-slider" id="demoW" min="2000" max="200000" step="1000" value="30000" aria-label="Demo monthly withdrawal">
+          <div class="demo-val" id="demoWVal">30,000</div>
+        </div>
+        <div class="demo-result-bar" role="status" aria-live="polite">
+          <div class="demo-result-label">Estimated Duration</div>
+          <div class="demo-result-val" id="demoDuration">— months</div>
+        </div>
+      </div>
+
+      <div class="tut-nav">
+        <button class="btn-back-tut" onclick="goLesson(2)">&#8592; Back</button>
+        <button class="btn-next" onclick="goLesson(4)">Next: Key Concepts &#8594;</button>
+      </div>
+    </article>
+
+    <div class="lesson-divider hidden-block" id="div3" aria-hidden="true"></div>
+
+    <!-- LESSON 4 -->
+    <article class="lesson hidden-block" id="lesson4" aria-labelledby="l4h">
+      <div class="lesson-num" aria-hidden="true">Lesson 4 of 4</div>
+      <h2 id="l4h">Three things that decide how long your money lasts</h2>
+      <p>
+        Whether your corpus lasts 10 years or 40 years depends on three factors.
+        Understanding these will help you make better decisions with the calculator.
+      </p>
+
+      <div class="concept-grid" role="list">
+        <div class="concept-card" role="listitem" style="border-left:3px solid var(--blue)">
+          <div class="concept-icon">Factor 1</div>
+          <div class="concept-name">Withdrawal vs. Growth</div>
+          <div class="concept-desc">If you withdraw more than your corpus earns in interest, your balance shrinks. If you withdraw less, it can last indefinitely. This ratio is the most important factor.</div>
+        </div>
+        <div class="concept-card" role="listitem" style="border-left:3px solid var(--grey)">
+          <div class="concept-icon">Factor 2</div>
+          <div class="concept-name">Inflation Step-Up</div>
+          <div class="concept-desc">As prices rise, you will naturally need more money each month. A step-up withdrawal means your monthly amount increases by a fixed percentage every year to keep up with inflation.</div>
+        </div>
+        <div class="concept-card" role="listitem" style="border-left:3px solid var(--red)">
+          <div class="concept-icon">Factor 3</div>
+          <div class="concept-name">Starting Corpus Size</div>
+          <div class="concept-desc">A larger starting corpus gives you more runway. Doubling your corpus while keeping the same withdrawal roughly doubles how long your money lasts.</div>
+        </div>
+      </div>
+
+      <div class="plain-lang-tut" role="note">
+        <div class="plt-title">The Safe Withdrawal Rate — a useful benchmark</div>
+        <p>
+          Financial planners generally suggest that withdrawing less than <strong>4% of your corpus per year</strong>
+          — which works out to roughly 0.33% per month — gives you the best chance of never running out of money.
+          This is because long-term investment returns in diversified funds have historically exceeded this level.
+          It is not a guarantee, but it is a widely used starting point for planning.
+          This calculator will show you your own withdrawal rate so you can see exactly where you stand.
+        </p>
+      </div>
+
+      <div class="tut-nav">
+        <button class="btn-back-tut" onclick="goLesson(3)">&#8592; Back</button>
+        <button class="btn-next" id="btnGoCalc" onclick="showCalculator()" style="background:linear-gradient(135deg,var(--blue),var(--blue-bright));font-size:13px;padding:16px 36px">
+          Open the Calculator &#8594;
+        </button>
+      </div>
+
+    </article>
+
+  </div><!-- /tut-container -->
+</div><!-- /tutorialPage -->
+
+
+<!-- ═══════════════════════════════
+     CALCULATOR PAGE
+═══════════════════════════════ -->
+<div id="calculatorPage" aria-label="SWP Calculator">
+
+  <header class="site-header" role="banner">
+    <div class="hdr-left">
+      <div class="logo-mark" aria-hidden="true"><span>FC</span></div>
+      <div class="hdr-text">
+        <div class="eyebrow">FinCal Innovation · Technex 2026</div>
+        <div class="hdr-name">SWP Calculator</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="btn-skip" onclick="showTutorial()" style="font-size:10px;padding:7px 16px">Review Tutorial</button>
+      <div class="hdr-badge" role="note">HDFC Mutual Fund</div>
+    </div>
+  </header>
+
+  <div class="calc-container">
+
+    <!-- Hero -->
+    <div class="calc-hero" role="region" aria-labelledby="calcHeroH">
+      <div class="calc-hero-tag" aria-hidden="true">Systematic Withdrawal Plan</div>
+      <h1 id="calcHeroH">How long will your savings last?</h1>
+      <p>Enter your numbers below. Every assumption is editable — the results are illustrative only, not a guarantee.</p>
+    </div>
+
+    <!-- Main card -->
+    <div class="calc-card" id="calcCard">
+
+      <!-- Panel 1: Corpus -->
+      <section class="c-panel" id="cpanel1" aria-labelledby="cp1title">
+        <div class="p-head">
+          <div class="p-num" aria-hidden="true">01</div>
+          <div class="p-title" id="cp1title">Your Total Savings</div>
+          <div class="p-sub">The total amount you have saved and will invest as a lump sum</div>
+        </div>
+        <div class="plain-box" role="note">
+          <strong>What is this?</strong> This is the total pot of money you are starting with —
+          for example, 50 Lakh saved over the years. It earns interest while you draw from it monthly.
+        </div>
+        <div class="inp-grid">
+          <div class="inp-block">
+            <div class="inp-lrow">
+              <label class="inp-label" for="investment">Total Savings Amount</label>
+              <span class="inp-hint">Editable</span>
+            </div>
+            <div class="inp-outer">
+              <span class="inp-prefix" aria-hidden="true">INR</span>
+              <div class="inp-row">
+                <input type="number" id="investment" min="10000" max="9999999999" step="10000"
+                  value="5000000" autocomplete="off"
+                  aria-label="Total savings in Indian Rupees — no currency symbol needed">
+                <span class="inp-unit" id="investmentUnit" aria-live="polite"></span>
+              </div>
+            </div>
+            <div class="sl-row">
+              <div class="sl-minmax" aria-hidden="true"><span>1 Lakh</span><span>5 Crore</span></div>
+              <input type="range" id="investmentSlider" min="100000" max="500000000" step="100000" value="5000000"
+                aria-label="Adjust total savings using slider" aria-controls="investment">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 2: Withdrawal -->
+      <section class="c-panel" id="cpanel2" aria-labelledby="cp2title">
+        <div class="p-head">
+          <div class="p-num" aria-hidden="true">02</div>
+          <div class="p-title" id="cp2title">Monthly Withdrawal Amount</div>
+          <div class="p-sub">How much you want to take out every month</div>
+        </div>
+        <div class="plain-box" role="note">
+          <strong>Think of this as your salary from savings.</strong>
+          If you withdraw 30,000 per month, that is 3.6 Lakh per year coming out.
+          The less you take, the longer your money lasts.
+        </div>
+
+        <div role="group" aria-labelledby="modeGroupLbl">
+          <div class="sc-group-label" id="modeGroupLbl">Withdrawal type</div>
+          <div class="mode-toggle" role="tablist" aria-label="Choose withdrawal type">
+            <button class="mode-btn active" role="tab" aria-selected="true" data-mode="fixed">Fixed Every Month</button>
+            <button class="mode-btn" role="tab" aria-selected="false" data-mode="stepup">Increases Each Year</button>
+          </div>
+        </div>
+
+        <div class="inp-grid" id="withdrawalInputs">
+          <div class="inp-block">
+            <div class="inp-lrow">
+              <label class="inp-label" for="withdrawal">Monthly Amount</label>
+              <span class="inp-hint">Editable</span>
+            </div>
+            <div class="inp-outer">
+              <span class="inp-prefix" aria-hidden="true">INR/mo</span>
+              <div class="inp-row" style="padding-left:96px">
+                <input type="number" id="withdrawal" min="100" max="99999999" step="500"
+                  value="30000" autocomplete="off"
+                  aria-label="Monthly withdrawal amount in Indian Rupees">
+                <span class="inp-unit" id="withdrawalUnit" aria-live="polite"></span>
+              </div>
+            </div>
+            <div class="sl-row">
+              <div class="sl-minmax" aria-hidden="true"><span>5,000 / month</span><span>10 Lakh / month</span></div>
+              <input type="range" id="withdrawalSlider" min="5000" max="1000000" step="500" value="30000"
+                aria-label="Adjust monthly withdrawal using slider" aria-controls="withdrawal">
+            </div>
+          </div>
+
+          <div class="inp-block hidden-block" id="stepupBlock">
+            <div class="inp-lrow">
+              <label class="inp-label" for="stepupRate">Annual Increase</label>
+              <span class="inp-hint" style="background:var(--red-08);color:var(--red-soft)">Inflation step-up</span>
+            </div>
+            <div class="inp-outer">
+              <span class="inp-prefix" aria-hidden="true">% / yr</span>
+              <div class="inp-row" style="padding-left:80px">
+                <input type="number" id="stepupRate" min="0" max="30" step="0.5" value="5" autocomplete="off"
+                  aria-label="Annual percentage increase in withdrawal amount">
+                <span class="inp-unit">per year</span>
+              </div>
+            </div>
+            <div class="sl-row">
+              <div class="sl-minmax" aria-hidden="true"><span>0%</span><span>15%</span></div>
+              <input type="range" id="stepupSlider" min="0" max="15" step="0.5" value="5"
+                aria-label="Adjust annual step-up percentage" aria-controls="stepupRate">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 3: Return & Inflation -->
+      <section class="c-panel" id="cpanel3" aria-labelledby="cp3title">
+        <div class="p-head">
+          <div class="p-num" aria-hidden="true">03</div>
+          <div class="p-title" id="cp3title">Growth and Inflation Assumptions</div>
+          <div class="p-sub">How fast your money grows, and how fast prices rise</div>
+        </div>
+        <div class="plain-box" role="note">
+          <strong>Return rate:</strong> How much your invested corpus grows each year.
+          8% means every 1 Lakh becomes 1.08 Lakh after a year.
+          <br><strong>Inflation:</strong> Prices rise every year — so your withdrawals need to rise too over time.
+        </div>
+
+        <div class="sc-group-label">Quick presets</div>
+        <div class="sc-chips" role="group" aria-label="Select a scenario preset">
+          <button class="sc-chip" data-ret="6"  data-inf="4" aria-pressed="false">Cautious — 6% return, 4% inflation</button>
+          <button class="sc-chip active" data-ret="8"  data-inf="5" aria-pressed="true">Balanced — 8% return, 5% inflation</button>
+          <button class="sc-chip" data-ret="11" data-inf="6" aria-pressed="false">Optimistic — 11% return, 6% inflation</button>
+          <button class="sc-chip" data-ret="0"  data-inf="0" aria-pressed="false">No growth at all</button>
+        </div>
+
+        <div class="inp-grid">
+          <div class="inp-block">
+            <div class="inp-lrow">
+              <label class="inp-label" for="rate">Annual Return Rate</label>
+              <span class="inp-hint">Editable</span>
+            </div>
+            <div class="inp-outer">
+              <span class="inp-prefix" aria-hidden="true">% p.a.</span>
+              <div class="inp-row" style="padding-left:78px">
+                <input type="number" id="rate" min="0" max="30" step="0.1" value="8" autocomplete="off"
+                  aria-label="Assumed annual return rate on corpus as a percentage">
+                <span class="inp-unit">per year</span>
+              </div>
+            </div>
+            <div class="sl-row">
+              <div class="sl-minmax" aria-hidden="true"><span>0%</span><span>20%</span></div>
+              <input type="range" id="rateSlider" min="0" max="20" step="0.1" value="8"
+                aria-label="Adjust return rate using slider" aria-controls="rate">
+            </div>
+          </div>
+
+          <div class="inp-block">
+            <div class="inp-lrow">
+              <label class="inp-label" for="inflationRate">Inflation Rate</label>
+              <span class="inp-hint">Editable</span>
+            </div>
+            <div class="inp-outer">
+              <span class="inp-prefix" aria-hidden="true">% p.a.</span>
+              <div class="inp-row" style="padding-left:78px">
+                <input type="number" id="inflationRate" min="0" max="20" step="0.5" value="5" autocomplete="off"
+                  aria-label="Expected annual inflation rate as a percentage">
+                <span class="inp-unit">per year</span>
+              </div>
+            </div>
+            <div class="sl-row">
+              <div class="sl-minmax" aria-hidden="true"><span>0%</span><span>15%</span></div>
+              <input type="range" id="inflSlider" min="0" max="15" step="0.5" value="5"
+                aria-label="Adjust inflation rate using slider" aria-controls="inflationRate">
+            </div>
+          </div>
+
+          <div class="inp-block">
+            <div class="inp-lrow">
+              <label class="inp-label" for="years">Duration to Model</label>
+              <span class="inp-hint">Editable</span>
+            </div>
+            <div class="inp-outer">
+              <span class="inp-prefix" aria-hidden="true">Years</span>
+              <div class="inp-row" style="padding-left:76px">
+                <input type="number" id="years" min="1" max="50" step="1" value="20" autocomplete="off"
+                  aria-label="Number of years to model the projection over">
+                <span class="inp-unit">years</span>
+              </div>
+            </div>
+            <div class="sl-row">
+              <div class="sl-minmax" aria-hidden="true"><span>1 year</span><span>50 years</span></div>
+              <input type="range" id="yearsSlider" min="1" max="50" step="1" value="20"
+                aria-label="Adjust duration using slider" aria-controls="years">
+            </div>
+          </div>
+        </div>
+
+        <!-- Live assumption pills -->
+        <div class="assm-row" role="status" aria-live="polite" aria-label="Current assumptions summary" id="assmPills">
+          <div class="assm-pill" id="pillInv" onclick="document.getElementById('cpanel1').scrollIntoView({behavior:'smooth'})">
+            <span class="pk">Corpus:</span><span class="pv" id="pvInv">50 Lakh</span><span class="pe">edit</span>
+          </div>
+          <div class="assm-pill" id="pillW" onclick="document.getElementById('cpanel2').scrollIntoView({behavior:'smooth'})">
+            <span class="pk">Monthly:</span><span class="pv" id="pvW">30,000 / mo</span><span class="pe">edit</span>
+          </div>
+          <div class="assm-pill" id="pillR" onclick="document.getElementById('cpanel3').scrollIntoView({behavior:'smooth'})">
+            <span class="pk">Return:</span><span class="pv" id="pvR">8% p.a.</span><span class="pe">edit</span>
+          </div>
+          <div class="assm-pill" id="pillI" onclick="document.getElementById('cpanel3').scrollIntoView({behavior:'smooth'})">
+            <span class="pk">Inflation:</span><span class="pv" id="pvI">5% p.a.</span><span class="pe">edit</span>
+          </div>
+          <div class="assm-pill" id="pillY" onclick="document.getElementById('cpanel3').scrollIntoView({behavior:'smooth'})">
+            <span class="pk">Duration:</span><span class="pv" id="pvY">20 years</span><span class="pe">edit</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Calculate button -->
+      <div class="calc-btn-wrap">
+        <button class="calc-btn" id="calcBtn" aria-label="Calculate how long your savings will last based on the inputs">
+          Calculate — See Your Results
+        </button>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="resultsSection" aria-live="polite" aria-label="Calculation results">
+
+        <div class="results-appear">
+
+          <!-- Hero result -->
+          <div class="res-hero" role="region" aria-labelledby="resHeroLabel">
+            <div class="res-hero-eyebrow" id="resHeroLabel">Your savings will last approximately</div>
+            <div class="res-hero-val" id="resHeroVal" aria-live="assertive">—</div>
+            <div class="res-hero-unit" id="resHeroUnit"></div>
+            <div class="res-hero-sub" id="resHeroSub"></div>
+          </div>
+
+          <!-- Stats -->
+          <div class="res-stats" role="region" aria-label="Summary statistics">
+            <div class="res-stat">
+              <div class="rs-label">Remaining Balance</div>
+              <div class="rs-val col-b" id="rsFinalBal" style="animation-delay:0.1s">—</div>
+              <div class="rs-unit">After the chosen duration</div>
+            </div>
+            <div class="res-stat">
+              <div class="rs-label">Total Withdrawn</div>
+              <div class="rs-val" id="rsTotalW" style="animation-delay:0.2s">—</div>
+              <div class="rs-unit">All monthly payouts combined</div>
+            </div>
+            <div class="res-stat">
+              <div class="rs-label">Balance at Year 10</div>
+              <div class="rs-val col-r" id="rsAt10y" style="animation-delay:0.3s">—</div>
+              <div class="rs-unit">Estimated midpoint check</div>
+            </div>
+          </div>
+
+          <!-- Sustain bar -->
+          <div class="sustain-wrap reveal" role="region" aria-labelledby="sustainLbl">
+            <div class="sustain-head">
+              <span class="sustain-title" id="sustainLbl">Corpus Sustainability</span>
+              <span class="sustain-badge" id="sustainBadge">—</span>
+            </div>
+            <div class="bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-labelledby="sustainLbl" id="barTrack">
+              <div class="bar-fill" id="barFill"></div>
+            </div>
+            <div class="bar-marks" aria-hidden="true" id="barMarks"></div>
+            <p class="sustain-desc" id="sustainDesc"></p>
+          </div>
+
+          <!-- Insight cards -->
+          <div class="insights-wrap reveal" role="region" aria-label="Plain-language insights about your plan">
+            <div class="s-label">Key Insights</div>
+            <div class="insights-grid">
+              <div class="ins-card" style="animation-delay:0.05s">
+                <div class="ins-head">Your Withdrawal Rate</div>
+                <div class="ins-val" id="insWRate">—</div>
+                <div class="ins-desc" id="insWRateDesc">% of corpus withdrawn monthly</div>
+              </div>
+              <div class="ins-card" style="animation-delay:0.1s">
+                <div class="ins-head">Real Return (after inflation)</div>
+                <div class="ins-val" id="insReal">—</div>
+                <div class="ins-desc">Your true effective growth rate after accounting for inflation</div>
+              </div>
+              <div class="ins-card" style="animation-delay:0.15s">
+                <div class="ins-head">Safe Monthly Amount</div>
+                <div class="ins-val" id="insBreak">—</div>
+                <div class="ins-desc">Max you can withdraw monthly so the corpus lasts indefinitely</div>
+              </div>
+              <div class="ins-card" style="animation-delay:0.2s">
+                <div class="ins-head">Corpus Health</div>
+                <div class="ins-val" id="insHealth">—</div>
+                <div class="ins-desc" id="insHealthDesc">Overall sustainability assessment</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart -->
+          <div class="chart-wrap reveal" role="region" aria-labelledby="chartLbl">
+            <div class="chart-head">
+              <span class="chart-title" id="chartLbl">Corpus Over Time</span>
+              <div class="chart-legend" aria-label="Chart legend">
+                <div class="cl-item"><div class="cl-line" style="background:#3570c0"></div><span>Balance</span></div>
+                <div class="cl-item"><div class="cl-line" style="background:#da3832;opacity:0.55"></div><span>Withdrawals</span></div>
+              </div>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="corpusChart" aria-label="Line chart showing corpus balance declining over time as withdrawals are made each year. Hover over the chart to see specific year values."></canvas>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="table-wrap-outer reveal" role="region" aria-labelledby="tableLbl">
+            <div class="s-label" id="tableLbl" style="margin-bottom:14px">Year-by-Year Projection</div>
+            <div class="table-inner">
+              <table role="table" aria-label="Annual projected corpus balance table">
+                <thead>
+                  <tr>
+                    <th scope="col">Year</th>
+                    <th scope="col">Opening Balance</th>
+                    <th scope="col">Annual Payout</th>
+                    <th scope="col">Interest Earned</th>
+                    <th scope="col">Closing Balance</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="yearTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Disclaimer (mandatory) -->
+          <div class="disclaimer" role="note">
+            <strong>Important Disclaimer:</strong>
+            This tool has been designed for information purposes only.
+            Actual results may vary depending on various factors involved in capital market.
+            Investor should not consider above as a recommendation for any schemes of HDFC Mutual Fund.
+            Past performance may or may not be sustained in future and is not a guarantee of any future returns.
+            All figures shown are illustrative assumptions based on user-defined inputs which may be edited at any time.
+          </div>
+
+          <!-- Recalculate -->
+          <div class="recalc-row">
+            <button class="btn-recalc" onclick="resetCalc()" aria-label="Clear results and change your inputs">
+              Change inputs and recalculate
+            </button>
+          </div>
+
+        </div><!-- /results-appear -->
+      </div><!-- /resultsSection -->
+
+    </div><!-- /calc-card -->
+  </div><!-- /calc-container -->
+</div><!-- /calculatorPage -->
+
+
+<!-- ══════════════════════════════════════════
+     VOICE ASSISTANT BUTTON + PANEL
+══════════════════════════════════════════ -->
+<button id="voiceBtn" aria-label="Open voice assistant — read page aloud" title="Voice Assistant">
+  <div class="voice-icon" aria-hidden="true">
+    <div class="voice-bar voice-bar-1"></div>
+    <div class="voice-bar voice-bar-2"></div>
+    <div class="voice-bar voice-bar-3"></div>
+    <div class="voice-bar voice-bar-4"></div>
+    <div class="voice-bar voice-bar-5"></div>
+  </div>
+</button>
+
+<div id="voicePanel" role="dialog" aria-modal="false" aria-label="Voice assistant controls" aria-hidden="true">
+  <div class="vp-head">
+    <span class="vp-title">Voice Assistant</span>
+    <button class="vp-close" id="vpClose" aria-label="Close voice assistant panel">&#10005;</button>
+  </div>
+  <div class="vp-status" id="vpStatus" aria-live="polite">
+    Tap a button below to have the page read aloud.
+  </div>
+  <div class="vp-actions">
+    <button class="vp-btn primary" id="vpReadPage" aria-label="Read the current page content from top to bottom">
+      Read This Page Aloud
+    </button>
+    <button class="vp-btn" id="vpReadSection" aria-label="Read only the current visible section">
+      Read Current Section
+    </button>
+    <button class="vp-btn" id="vpStop" aria-label="Stop reading" style="display:none">
+      Stop Reading
+    </button>
+    <div class="vp-speed-row">
+      <span class="vp-speed-label">Speed</span>
+      <div class="vp-speed-btns" role="group" aria-label="Reading speed">
+        <button class="speed-chip" data-rate="0.8" aria-pressed="false">Slow</button>
+        <button class="speed-chip active" data-rate="1" aria-pressed="true">Normal</button>
+        <button class="speed-chip" data-rate="1.3" aria-pressed="false">Fast</button>
+      </div>
+    </div>
+  </div>
+  <div class="vp-note" role="note">
+    Uses your device's built-in text-to-speech. Works on iOS, Android, and desktop browsers.
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   STAR CANVAS
+══════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('starCanvas'),ctx=c.getContext('2d');
+  let stars=[];
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight}
+  function init(){
+    stars=[];
+    for(let i=0;i<100;i++) stars.push({
+      x:Math.random()*c.width,y:Math.random()*c.height,
+      r:Math.random()*1.1+0.2,a:Math.random(),
+      sp:Math.random()*0.003+0.001,ph:Math.random()*Math.PI*2
+    });
+  }
+  function draw(t){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{
+      const al=s.a*(0.35+0.65*Math.sin(t*s.sp+s.ph));
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(34,76,135,${al})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  resize();init();requestAnimationFrame(draw);
+  window.addEventListener('resize',()=>{resize();init()});
+})();
+
+/* ══════════════════════════════════════════════
+   PAGE NAVIGATION
+══════════════════════════════════════════════ */
+function showPage(id){
+  ['landingPage','tutorialPage','calculatorPage'].forEach(p=>{
+    document.getElementById(p).style.display= p===id?'block':'none';
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showLanding()  { showPage('landingPage') }
+function showTutorial() { showPage('tutorialPage'); goLesson(1) }
+function showCalculator(){ showPage('calculatorPage') }
+
+document.getElementById('btnStartLearning').addEventListener('click', showTutorial);
+document.getElementById('btnSkipToCalc').addEventListener('click',   showCalculator);
+
+/* ══════════════════════════════════════════════
+   TUTORIAL LESSONS
+══════════════════════════════════════════════ */
+let currentLesson = 1;
+const TOTAL_LESSONS = 4;
+
+function goLesson(n){
+  // hide all
+  for(let i=1;i<=TOTAL_LESSONS;i++){
+    const l=document.getElementById('lesson'+i);
+    const d=document.getElementById('div'+i);
+    l.classList.toggle('hidden-block', i>n);
+    if(d) d.classList.toggle('hidden-block', i>=n);
+  }
+  currentLesson=n;
+  // update progress
+  const pct=Math.round((n/TOTAL_LESSONS)*100);
+  document.getElementById('tutProgress').style.width=pct+'%';
+  document.getElementById('tutProgressWrap').setAttribute('aria-valuenow',pct);
+  // scroll to new lesson
+  setTimeout(()=>{
+    const el=document.getElementById('lesson'+n);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  },50);
+}
+
+/* ══════════════════════════════════════════════
+   INTERACTIVE MINI DEMO (tutorial)
+══════════════════════════════════════════════ */
+function updateDemo(){
+  const corpus = +document.getElementById('demoCorpus').value||0;
+  const w      = +document.getElementById('demoW').value||0;
+  document.getElementById('demoCorpusVal').textContent = fmtIndian(corpus);
+  document.getElementById('demoWVal').textContent      = fmtComma(w)+' / mo';
+  if(!corpus||!w){document.getElementById('demoDuration').textContent='—';return}
+  // simple quick calc at 8% return, no inflation
+  const r=8/100/12;
+  let bal=corpus,m=0;
+  while(bal>0&&m<1200){bal=bal*(1+r)-w;m++}
+  const yrs=Math.floor(m/12),mos=m%12;
+  document.getElementById('demoDuration').textContent=
+    m>=1200?'Forever (corpus sustains itself)':
+    yrs>0?yrs+' years '+(mos>0?mos+' months':''):mos+' months';
+}
+['demoCorpus','demoW'].forEach(id=>{
+  const sl=document.getElementById(id);
+  if(sl) sl.addEventListener('input',updateDemo);
+});
+updateDemo();
+
+/* ══════════════════════════════════════════════
+   3D CARD TILT — desktop only (iOS crashes on perspective transforms during scroll)
+══════════════════════════════════════════════ */
+const calcCard=document.getElementById('calcCard');
+const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+if (!isTouchDevice) {
+  calcCard.addEventListener('mousemove',e=>{
+    const r=calcCard.getBoundingClientRect();
+    const dx=(e.clientX-(r.left+r.width/2))/(r.width/2);
+    const dy=(e.clientY-(r.top+r.height/2))/(r.height/2);
+    calcCard.style.transform=`rotateY(${dx*3.5}deg) rotateX(${-dy*2.5}deg)`;
+  });
+  calcCard.addEventListener('mouseleave',()=>{calcCard.style.transform='rotateY(0) rotateX(0)'});
+}
+
+/* ══════════════════════════════════════════════
+   SLIDER FILL SYNC
+══════════════════════════════════════════════ */
+function fillSlider(sl){
+  const mn=+sl.min,mx=+sl.max,v=+sl.value;
+  const p=Math.round(((v-mn)/(mx-mn))*100);
+  sl.style.background=`linear-gradient(90deg,#3570c0 ${p}%,rgba(145,144,144,0.25) ${p}%)`;
+}
+function pairSync(inpId,slId,cb){
+  const inp=document.getElementById(inpId);
+  const sl =document.getElementById(slId);
+  if(!inp||!sl)return;
+  inp.addEventListener('input',()=>{sl.value=inp.value;fillSlider(sl);if(cb)cb()});
+  sl.addEventListener('input', ()=>{inp.value=sl.value;fillSlider(sl);if(cb)cb()});
+  fillSlider(sl);
+}
+pairSync('investment',  'investmentSlider', updatePills);
+pairSync('withdrawal',  'withdrawalSlider', updatePills);
+pairSync('rate',        'rateSlider',       updatePills);
+pairSync('inflationRate','inflSlider',      updatePills);
+pairSync('years',       'yearsSlider',      updatePills);
+pairSync('stepupRate',  'stepupSlider',     null);
+
+/* ══════════════════════════════════════════════
+   WITHDRAWAL MODE
+══════════════════════════════════════════════ */
+let wMode='fixed';
+document.querySelectorAll('.mode-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.mode-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false')});
+    btn.classList.add('active');btn.setAttribute('aria-selected','true');
+    wMode=btn.dataset.mode;
+    document.getElementById('stepupBlock').classList.toggle('hidden-block',wMode!=='stepup');
+  });
+});
+
+/* ══════════════════════════════════════════════
+   SCENARIO CHIPS
+══════════════════════════════════════════════ */
+document.querySelectorAll('.sc-chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.sc-chip').forEach(c=>{c.classList.remove('active');c.setAttribute('aria-pressed','false')});
+    chip.classList.add('active');chip.setAttribute('aria-pressed','true');
+    const ret=+chip.dataset.ret,inf=+chip.dataset.inf;
+    document.getElementById('rate').value=ret;
+    document.getElementById('rateSlider').value=ret;
+    fillSlider(document.getElementById('rateSlider'));
+    document.getElementById('inflationRate').value=inf;
+    document.getElementById('inflSlider').value=inf;
+    fillSlider(document.getElementById('inflSlider'));
+    updatePills();
+  });
+});
+
+/* ══════════════════════════════════════════════
+   NUMBER FORMATTING — NO CURRENCY SYMBOLS
+══════════════════════════════════════════════ */
+function fmtIndian(n){
+  if(!isFinite(n)||isNaN(n))return'—';
+  n=Math.round(n);
+  if(n>=1e7) return(n/1e7).toFixed(2)+' Crore';
+  if(n>=1e5) return(n/1e5).toFixed(2)+' Lakh';
+  if(n>=1e3) return(n/1e3).toFixed(1)+' Thousand';
+  return n.toLocaleString('en-IN');
+}
+function fmtShort(n){
+  if(!isFinite(n)||isNaN(n))return'—';
+  n=Math.round(n);
+  if(n>=1e7) return(n/1e7).toFixed(1)+' Cr';
+  if(n>=1e5) return(n/1e5).toFixed(1)+' L';
+  return n.toLocaleString('en-IN');
+}
+function fmtComma(n){
+  if(!isFinite(n)||isNaN(n))return'—';
+  return Math.round(n).toLocaleString('en-IN');
+}
+
+/* Live unit hints next to inputs */
+function unitHint(inputId,unitId){
+  const v=+document.getElementById(inputId).value;
+  const el=document.getElementById(unitId);if(!el)return;
+  if(v>=1e7)      el.textContent='('+((v/1e7).toFixed(2))+' Crore)';
+  else if(v>=1e5) el.textContent='('+((v/1e5).toFixed(2))+' Lakh)';
+  else if(v>=1e3) el.textContent='('+((v/1e3).toFixed(1))+' Thousand)';
+  else            el.textContent='';
+}
+
+/* Live assumption pills */
+function updatePills(){
+  unitHint('investment','investmentUnit');
+  unitHint('withdrawal','withdrawalUnit');
+  document.getElementById('pvInv').textContent = fmtIndian(+document.getElementById('investment').value);
+  document.getElementById('pvW').textContent   = fmtIndian(+document.getElementById('withdrawal').value)+' / mo';
+  document.getElementById('pvR').textContent   = document.getElementById('rate').value+'% p.a.';
+  document.getElementById('pvI').textContent   = document.getElementById('inflationRate').value+'% p.a.';
+  document.getElementById('pvY').textContent   = document.getElementById('years').value+' years';
+}
+updatePills();
+
+/* ══════════════════════════════════════════════
+   CORE SWP CALCULATION
+   Integrating the provided calculateSWP logic:
+   balance = balance * (1 + monthlyRate) - withdrawal
+   with optional annual step-up
+══════════════════════════════════════════════ */
+function calculateSWP(investment, withdrawal, annualRate, years) {
+  /* Original provided function — exactly as given */
+  let monthlyRate = annualRate / 100 / 12;
+  let months = years * 12;
+  let balance = investment;
+  for (let i = 1; i <= months; i++) {
+    balance = balance * (1 + monthlyRate);
+    balance = balance - withdrawal;
+  }
+  return balance;
+}
+
+function computeFullSWP(investment, withdrawal, annualRate, annualInflation, years, useStepup, stepupRate) {
+  const r    = annualRate / 100 / 12;
+  const infl = annualInflation / 100;
+  const stepup = stepupRate / 100;
+  let bal = investment;
+  let totalWithdrawn = 0;
+  let totalInterest  = 0;
+  let w = withdrawal;
+  let depletedMonth  = null;
+  const snapshots    = [];
+  let balAt10y       = null;
+
+  const totalMonths = years * 12;
+
+  for (let mo = 1; mo <= totalMonths; mo++) {
+    /* Annual step-up at start of each new year */
+    if (useStepup && mo > 1 && (mo - 1) % 12 === 0) {
+      w *= (1 + stepup);
+    }
+    /* Provided logic: balance = balance * (1+r) - withdrawal */
+    const interest = bal * r;
+    totalInterest += interest;
+    bal = bal * (1 + r) - w;
+    const payout = bal < 0 ? w + bal : w;
+    totalWithdrawn += payout;
+    if (bal <= 0 && depletedMonth === null) {
+      depletedMonth = mo;
+      bal = 0;
+    }
+    /* year snapshot */
+    if (mo % 12 === 0) {
+      const yr = mo / 12;
+      if (yr === 10) balAt10y = Math.max(0, bal);
+      snapshots.push({ year: yr, close: Math.max(0, bal) });
+    }
+  }
+  if (balAt10y === null) balAt10y = Math.max(0, bal);
+
+  /* Rebuild for table */
+  const tableRows = [];
+  let tb = investment;
+  let tw = withdrawal;
+  for (let y = 1; y <= years && y <= 40; y++) {
+    const open = tb;
+    let annW = 0, annI = 0;
+    for (let m = 0; m < 12; m++) {
+      if (tb <= 0) break;
+      const i = tb * r;
+      annI += i;
+      const payout = Math.min(tw, tb + i);
+      annW += payout;
+      tb = tb + i - tw;
+      if (tb < 0) tb = 0;
+    }
+    if (useStepup) tw *= (1 + stepup);
+    tableRows.push({ year: y, open, withdrawal: annW, interest: annI, close: Math.max(0, tb) });
+  }
+
+  return {
+    finalBalance: Math.max(0, calculateSWP(investment, withdrawal, annualRate, years)),
+    totalWithdrawn,
+    totalInterest,
+    balAt10y: balAt10y || 0,
+    depletedMonth,
+    snapshots,
+    tableRows
+  };
+}
+
+/* ══════════════════════════════════════════════
+   CANVAS CHART
+══════════════════════════════════════════════ */
+function drawChart(snapshots, corpus) {
+  const canvas = document.getElementById('corpusChart');
+  const wrap   = canvas.parentElement;
+  const dpr    = window.devicePixelRatio || 1;
+  canvas.width  = wrap.offsetWidth * dpr;
+  canvas.height = wrap.offsetHeight * dpr;
+  canvas.style.width  = wrap.offsetWidth + 'px';
+  canvas.style.height = wrap.offsetHeight + 'px';
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = wrap.offsetWidth, H = wrap.offsetHeight;
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = { top: 20, right: 24, bottom: 36, left: 68 };
+  const cW = W - pad.left - pad.right;
+  const cH = H - pad.top  - pad.bottom;
+
+  const vals = [corpus, ...snapshots.map(d => d.close)];
+  const maxV = corpus;
+  const xPos = i => pad.left + (i / (vals.length - 1 || 1)) * cW;
+  const yPos = v => pad.top  + (1 - Math.min(v, maxV) / maxV) * cH;
+
+  /* Grid */
+  ctx.strokeStyle = 'rgba(34,76,135,0.1)';
+  ctx.lineWidth = 1;
+  [0,.25,.5,.75,1].forEach(f => {
+    const y = pad.top + f * cH;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+    ctx.fillStyle = 'rgba(145,144,144,0.45)';
+    ctx.font = '9px Montserrat,Arial';
+    ctx.textAlign = 'right';
+    ctx.fillText(fmtShort(maxV * (1 - f)), pad.left - 6, y + 3);
+  });
+
+  /* Area fill */
+  const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + cH);
+  grad.addColorStop(0,   'rgba(34,76,135,0.38)');
+  grad.addColorStop(0.7, 'rgba(34,76,135,0.1)');
+  grad.addColorStop(1,   'rgba(34,76,135,0.02)');
+  ctx.beginPath();
+  vals.forEach((v, i) => {
+    const x = xPos(i), y = yPos(v);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.lineTo(xPos(vals.length - 1), pad.top + cH);
+  ctx.lineTo(pad.left, pad.top + cH);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  /* Line — animate draw */
+  ctx.beginPath();
+  vals.forEach((v, i) => {
+    const x = xPos(i), y = yPos(v);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = '#3570c0';
+  ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  /* Dots */
+  vals.forEach((v, i) => {
+    const x = xPos(i), y = yPos(v);
+    ctx.beginPath();
+    ctx.arc(x, y, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle   = v <= 0 ? '#da3832' : '#3570c0';
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.lineWidth   = 1.5;
+    ctx.fill(); ctx.stroke();
+  });
+
+  /* X labels */
+  ctx.fillStyle = 'rgba(145,144,144,0.5)';
+  ctx.font = '9px Montserrat,Arial';
+  ctx.textAlign = 'center';
+  const step = Math.max(1, Math.floor(vals.length / 8));
+  vals.forEach((_, i) => {
+    if (i % step === 0 && i > 0) ctx.fillText('Yr ' + i, xPos(i), H - 6);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   ANIMATED NUMBER COUNTER
+══════════════════════════════════════════════ */
+function animateValue(el, endStr, duration) {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(16px)';
+  setTimeout(() => {
+    el.textContent = endStr;
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+  }, duration);
+}
+
+/* ══════════════════════════════════════════════
+   MAIN CALCULATE
+══════════════════════════════════════════════ */
+function runCalculator() {
+  const investment = parseFloat(document.getElementById('investment').value) || 0;
+  const withdrawal = parseFloat(document.getElementById('withdrawal').value) || 0;
+  const rate       = parseFloat(document.getElementById('rate').value)       || 0;
+  const inflation  = parseFloat(document.getElementById('inflationRate').value) || 0;
+  const years      = parseFloat(document.getElementById('years').value)      || 20;
+  const stepup     = parseFloat(document.getElementById('stepupRate').value) || 0;
+  const useStep    = wMode === 'stepup';
+
+  if (!investment || !withdrawal) {
+    document.getElementById('cpanel1').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('investment').focus();
+    return;
+  }
+
+  /* Core result using the provided calculateSWP function */
+  const finalBalance = calculateSWP(investment, withdrawal, rate, years);
+
+  /* Extended data for rich display */
+  const data = computeFullSWP(investment, withdrawal, rate, inflation, years, useStep, stepup);
+
+  const yrs = Math.floor(years);
+  const bal = Math.max(0, finalBalance);
+
+  /* ── Hero result ── */
+  const heroEl = document.getElementById('resHeroVal');
+  heroEl.classList.add('counting');
+  setTimeout(() => heroEl.classList.remove('counting'), 500);
+
+  if (finalBalance > investment * 0.5) {
+    heroEl.textContent = yrs + ' Years';
+    document.getElementById('resHeroUnit').textContent = 'Corpus is still growing or sustainable';
+    document.getElementById('resHeroSub').textContent  = 'After ' + yrs + ' years of monthly withdrawals, your corpus still has ' + fmtIndian(bal) + ' remaining. You are withdrawing less than you are earning.';
+  } else if (finalBalance > 0) {
+    heroEl.textContent = yrs + ' Years';
+    document.getElementById('resHeroUnit').textContent = '(' + (years * 12) + ' total monthly payouts)';
+    document.getElementById('resHeroSub').textContent  = 'Your corpus decreases over the period. Remaining balance after ' + yrs + ' years is ' + fmtIndian(bal) + '.';
+  } else {
+    /* find depletion month */
+    const dm = data.depletedMonth;
+    const dy = dm ? Math.floor(dm/12) : null;
+    const dmth = dm ? dm%12 : null;
+    heroEl.textContent = dm ? (dy + ' Yr ' + (dmth ? dmth + ' Mo' : '')) : '0 Months';
+    document.getElementById('resHeroUnit').textContent = dm ? '(' + dm + ' total monthly payouts before depletion)' : '';
+    document.getElementById('resHeroSub').textContent  = 'At this withdrawal rate, your corpus runs out before the ' + yrs + '-year mark. Consider reducing your monthly withdrawal or increasing your corpus.';
+  }
+
+  /* ── Stats ── */
+  animateValue(document.getElementById('rsFinalBal'),   fmtIndian(bal), 80);
+  animateValue(document.getElementById('rsTotalW'),     fmtIndian(data.totalWithdrawn), 120);
+  animateValue(document.getElementById('rsAt10y'),      fmtIndian(data.balAt10y), 160);
+
+  /* ── Sustainability ── */
+  const pct = finalBalance <= 0
+    ? Math.min(100, (data.depletedMonth || 0) / (years * 12) * 100)
+    : Math.min(100, (bal / investment) * 100);
+  setTimeout(() => {
+    document.getElementById('barFill').style.width = pct + '%';
+    document.getElementById('barTrack').setAttribute('aria-valuenow', Math.round(pct));
+  }, 200);
+
+  const milestones = [];
+  for (let y = 5; y <= years; y += 5) milestones.push(y + 'Y');
+  document.getElementById('barMarks').innerHTML = milestones.map(m=>`<span>${m}</span>`).join('');
+
+  let sbText, sbCls;
+  if (finalBalance > investment * 0.5) { sbText = 'Self-sustaining';      sbCls = 'sb-good'; }
+  else if (finalBalance > 0)            { sbText = 'Declining Slowly';     sbCls = 'sb-caution'; }
+  else                                  { sbText = 'Depleted Before End';  sbCls = 'sb-low'; }
+  const badge = document.getElementById('sustainBadge');
+  badge.textContent = sbText;
+  badge.className = 'sustain-badge ' + sbCls;
+
+  document.getElementById('sustainDesc').textContent =
+    finalBalance > investment * 0.5
+      ? 'Your corpus earns more in interest than you withdraw. This is an ideal, sustainable plan.'
+      : finalBalance > 0
+        ? 'Your corpus is slowly declining. It will last the full ' + yrs + ' years but will eventually need adjustment if extended further.'
+        : 'Your corpus runs out before ' + yrs + ' years at this withdrawal rate. Lower your monthly withdrawal or increase your initial savings.';
+
+  /* ── Insights ── */
+  const wRatePct = ((withdrawal / investment) * 100).toFixed(3);
+  document.getElementById('insWRate').textContent    = wRatePct + '% / month';
+  document.getElementById('insWRateDesc').textContent= 'You withdraw ' + wRatePct + '% of your total corpus every month. Below 0.5% is generally considered sustainable.';
+
+  const realRet = (rate - inflation).toFixed(1);
+  document.getElementById('insReal').textContent = realRet + '% per year';
+
+  const breakeven = Math.round(investment * (rate / 100 / 12));
+  document.getElementById('insBreak').textContent = fmtIndian(breakeven) + ' / month';
+
+  let health, healthDesc;
+  if (finalBalance > investment)            { health = 'Excellent'; healthDesc = 'Growing — you withdraw less than interest earned.'; }
+  else if (finalBalance > investment * 0.5) { health = 'Good';      healthDesc = 'Sustainable — corpus remains healthy after ' + yrs + ' years.'; }
+  else if (finalBalance > 0)                { health = 'Moderate';  healthDesc = 'Declining — consider reducing withdrawal over time.'; }
+  else                                      { health = 'Review';    healthDesc = 'Depletes before the end of your chosen period.'; }
+  document.getElementById('insHealth').textContent    = health;
+  document.getElementById('insHealthDesc').textContent= healthDesc;
+
+  /* ── Year table ── */
+  const tbody = document.getElementById('yearTbody');
+  tbody.innerHTML = '';
+  data.tableRows.forEach((row, idx) => {
+    const sc = row.close > investment * 0.5 ? 's-ok' : row.close > 0 ? 's-mid' : 's-end';
+    const sl = row.close > investment * 0.5 ? 'Healthy' : row.close > 0 ? 'Declining' : 'Depleted';
+    const tr = document.createElement('tr');
+    tr.style.animationDelay = (idx * 0.03) + 's';
+    tr.style.animation = 'statRise 0.4s ease both';
+    tr.innerHTML = `
+      <td class="td-n">${row.year}</td>
+      <td class="td-n">${fmtIndian(row.open)}</td>
+      <td class="td-m">${fmtIndian(row.withdrawal)}</td>
+      <td class="td-p">${fmtIndian(row.interest)}</td>
+      <td class="td-n">${fmtIndian(row.close)}</td>
+      <td><span class="s-badge ${sc}">${sl}</span></td>`;
+    tbody.appendChild(tr);
+  });
+
+  /* ── Show results ── */
+  const res = document.getElementById('resultsSection');
+  res.style.display = 'block';
+  setTimeout(() => {
+    res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    drawChart(data.snapshots, investment);
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  }, 100);
+}
+
+/* ══════════════════════════════════════════════
+   RESET
+══════════════════════════════════════════════ */
+function resetCalc() {
+  document.getElementById('resultsSection').style.display = 'none';
+  document.getElementById('cpanel1').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ══════════════════════════════════════════════
+   EVENTS
+══════════════════════════════════════════════ */
+document.getElementById('calcBtn').addEventListener('click', runCalculator);
+
+/* ══════════════════════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════════════════════ */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
+showPage('landingPage');
+updatePills();
+
+/* ══════════════════════════════════════════════
+   VOICE ASSISTANT ENGINE
+   Uses Web Speech API (SpeechSynthesis) —
+   built into all modern browsers including iOS Safari 7+
+══════════════════════════════════════════════ */
+(function(){
+  const btn     = document.getElementById('voiceBtn');
+  const panel   = document.getElementById('voicePanel');
+  const vpClose = document.getElementById('vpClose');
+  const status  = document.getElementById('vpStatus');
+  const btnRead = document.getElementById('vpReadPage');
+  const btnSec  = document.getElementById('vpReadSection');
+  const btnStop = document.getElementById('vpStop');
+
+  let speechRate  = 1;
+  let isSpeaking  = false;
+  let utterances  = [];
+
+  /* ── Check support ── */
+  const synth = window.speechSynthesis;
+  if (!synth) {
+    btn.style.display = 'none';
+    return;
+  }
+
+  /* ── Panel toggle ── */
+  btn.addEventListener('click', () => {
+    const isOpen = panel.classList.contains('open');
+    if (isOpen) {
+      closePanel();
+    } else {
+      panel.classList.add('open');
+      panel.setAttribute('aria-hidden','false');
+      btn.setAttribute('aria-expanded','true');
+      vpClose.focus();
+    }
+  });
+
+  vpClose.addEventListener('click', closePanel);
+
+  function closePanel() {
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden','true');
+    btn.setAttribute('aria-expanded','false');
+    btn.focus();
+  }
+
+  /* Close panel on outside tap */
+  document.addEventListener('click', e => {
+    if (!panel.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+      if (panel.classList.contains('open')) closePanel();
+    }
+  });
+
+  /* ── Speed chips ── */
+  document.querySelectorAll('.speed-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.speed-chip').forEach(c => {
+        c.classList.remove('active');
+        c.setAttribute('aria-pressed','false');
+      });
+      chip.classList.add('active');
+      chip.setAttribute('aria-pressed','true');
+      speechRate = parseFloat(chip.dataset.rate);
+      if (isSpeaking) {
+        // restart at new speed
+        const texts = utterances.slice();
+        stopSpeech();
+        setTimeout(() => speakTexts(texts), 200);
+      }
+    });
+  });
+
+  /* ── Extract readable text from a section ── */
+  function extractTexts(root) {
+    const texts = [];
+    const walker = document.createTreeWalker(
+      root,
+      NodeFilter.SHOW_ELEMENT,
+      {
+        acceptNode(node) {
+          // Skip hidden, decorative, voice panel itself
+          if (node.id === 'voicePanel' || node.id === 'voiceBtn') return NodeFilter.FILTER_REJECT;
+          if (node.getAttribute('aria-hidden') === 'true') return NodeFilter.FILTER_REJECT;
+          if (node.classList && node.classList.contains('hidden-block')) return NodeFilter.FILTER_REJECT;
+          const style = window.getComputedStyle(node);
+          if (style.display === 'none' || style.visibility === 'hidden') return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      }
+    );
+
+    const readable = ['H1','H2','H3','H4','P','LI','TD','TH','LABEL',
+                      'DIV','SPAN','BUTTON','FIGCAPTION'];
+    const seen = new Set();
+
+    while (walker.nextNode()) {
+      const el = walker.currentNode;
+      if (!readable.includes(el.tagName)) continue;
+      // Only leaf-ish text nodes
+      const direct = Array.from(el.childNodes)
+        .filter(n => n.nodeType === Node.TEXT_NODE)
+        .map(n => n.textContent.trim())
+        .join(' ').trim();
+      if (direct.length > 6 && !seen.has(direct)) {
+        seen.add(direct);
+        texts.push(direct);
+      }
+    }
+    return texts;
+  }
+
+  /* ── Get content for current visible page ── */
+  function getCurrentPageTexts() {
+    // Find which page is visible
+    const pages = ['landingPage','tutorialPage','calculatorPage'];
+    for (const id of pages) {
+      const el = document.getElementById(id);
+      if (el && el.style.display !== 'none') {
+        return extractTexts(el);
+      }
+    }
+    return extractTexts(document.body);
+  }
+
+  /* ── Get current section (nearest visible article/section) ── */
+  function getCurrentSectionTexts() {
+    // Find what's in viewport
+    const sections = document.querySelectorAll('article,section,.c-panel,.res-hero,.sustain-wrap,.insights-wrap');
+    let best = null, bestArea = 0;
+    sections.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) {
+        const visible = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+        if (visible > bestArea) { bestArea = visible; best = el; }
+      }
+    });
+    if (best) return extractTexts(best);
+    return getCurrentPageTexts();
+  }
+
+  /* ── Core speak function (chunked for iOS) ── */
+  function speakTexts(texts) {
+    if (!texts.length) {
+      setStatus('Nothing to read on this section.', false);
+      return;
+    }
+
+    stopSpeech();
+    isSpeaking   = true;
+    utterances   = texts;
+    let idx      = 0;
+
+    btn.classList.add('speaking');
+    btnStop.style.display = 'block';
+    btnRead.style.display = 'none';
+    btnSec.style.display  = 'none';
+    setStatus('Reading: ' + texts[0].substring(0, 60) + '…', true);
+
+    // iOS Safari requires utterances to be created & spoken
+    // inside a user gesture chain — we chain them via onend
+    function speakNext() {
+      if (idx >= texts.length || !isSpeaking) {
+        onDone();
+        return;
+      }
+      const utter = new SpeechSynthesisUtterance(texts[idx]);
+      utter.rate  = speechRate;
+      utter.pitch = 1.05;
+      utter.lang  = 'en-IN'; // Indian English for context
+      utter.volume = 1;
+
+      // Pick a clear, natural voice if available
+      const voices = synth.getVoices();
+      const preferred = voices.find(v =>
+        /en[-_](IN|GB|AU|US)/i.test(v.lang) && v.name.toLowerCase().includes('female')
+      ) || voices.find(v => /en[-_](IN|GB|AU|US)/i.test(v.lang))
+        || voices.find(v => /en/i.test(v.lang));
+      if (preferred) utter.voice = preferred;
+
+      utter.onstart = () => {
+        const preview = texts[idx].substring(0, 55);
+        setStatus('Speaking: ' + preview + (texts[idx].length > 55 ? '…' : ''), true);
+      };
+      utter.onend = () => {
+        idx++;
+        if (isSpeaking) speakNext();
+      };
+      utter.onerror = (e) => {
+        if (e.error === 'interrupted' || e.error === 'canceled') return;
+        idx++;
+        if (isSpeaking) speakNext();
+      };
+
+      synth.speak(utter);
+    }
+
+    // iOS Safari: voices may not be loaded yet on first call
+    if (synth.getVoices().length === 0) {
+      synth.addEventListener('voiceschanged', speakNext, { once: true });
+      // Fallback if event never fires (some browsers)
+      setTimeout(() => { if (idx === 0 && isSpeaking) speakNext(); }, 300);
+    } else {
+      speakNext();
+    }
+  }
+
+  function stopSpeech() {
+    synth.cancel();
+    isSpeaking = false;
+    utterances = [];
+  }
+
+  function onDone() {
+    isSpeaking = false;
+    btn.classList.remove('speaking');
+    btnStop.style.display  = 'none';
+    btnRead.style.display  = 'block';
+    btnSec.style.display   = 'block';
+    setStatus('Finished reading. Tap again to replay.', false);
+  }
+
+  function setStatus(text, active) {
+    status.textContent = text;
+    status.classList.toggle('active', active);
+  }
+
+  /* ── Button events ── */
+  btnRead.addEventListener('click', () => {
+    speakTexts(getCurrentPageTexts());
+  });
+
+  btnSec.addEventListener('click', () => {
+    speakTexts(getCurrentSectionTexts());
+  });
+
+  btnStop.addEventListener('click', () => {
+    stopSpeech();
+    onDone();
+    setStatus('Stopped. Tap "Read This Page Aloud" to start again.', false);
+  });
+
+  /* Stop speaking when page changes */
+  window._origShowPage = window.showPage;
+  window.showPage = function(id) {
+    stopSpeech();
+    onDone();
+    window._origShowPage(id);
+  };
+
+  /* iOS Safari: re-resume synthesis after a page visibility change
+     (iOS pauses synthesis when tab goes to background) */
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && isSpeaking) {
+      synth.resume();
+    }
+  });
+
+  // Kick voices load on page ready (required for iOS)
+  window.addEventListener('load', () => { synth.getVoices(); });
+
+})();
+</script>
+</body>
+</html>
